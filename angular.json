@@ -119,6 +119,41 @@
           }
         }
       }
+    },
+    "ng-filterable-grid": {
+      "projectType": "library",
+      "root": "projects/ng-filterable-grid",
+      "sourceRoot": "projects/ng-filterable-grid/src",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-ng-packagr:build",
+          "options": {
+            "tsConfig": "projects/ng-filterable-grid/tsconfig.lib.json",
+            "project": "projects/ng-filterable-grid/ng-package.json"
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/ng-filterable-grid/src/test.ts",
+            "tsConfig": "projects/ng-filterable-grid/tsconfig.spec.json",
+            "karmaConfig": "projects/ng-filterable-grid/karma.conf.js"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "projects/ng-filterable-grid/tsconfig.lib.json",
+              "projects/ng-filterable-grid/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
     }},
   "defaultProject": "ng-ecom-kit"
 }
