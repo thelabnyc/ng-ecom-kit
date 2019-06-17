@@ -3,14 +3,18 @@ import { NgModule } from '@angular/core';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { NgFilterableGridModule } from 'projects/ng-filterable-grid/src/public-api';
+import { ListingComponent } from './listing/listing.component';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    ListingComponent
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    NgFilterableGridModule
   ],
   providers: [],
   bootstrap: [AppComponent]
