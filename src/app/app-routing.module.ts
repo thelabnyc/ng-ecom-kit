@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { NgFilterableGridComponent } from 'projects/ng-filterable-grid/src/public-api';
 import { ListingComponent } from './listing/listing.component';
+import { GridComponent } from './grid/grid.component';
 
 const routes: Routes = [
   {
@@ -10,7 +10,7 @@ const routes: Routes = [
   },
   {
     path: 'grid',
-    component: NgFilterableGridComponent
+    component: GridComponent
   }
 ];
 
@@ -18,4 +18,4 @@ const routes: Routes = [
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule]
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}

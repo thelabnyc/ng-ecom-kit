@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { NgFilterableGridComponent } from './ng-filterable-grid.component';
+import { FilterableGridComponent } from './filterable-grid.component';
 
 describe('NgFilterableGridComponent', () => {
-  let component: NgFilterableGridComponent;
-  let fixture: ComponentFixture<NgFilterableGridComponent>;
+  let component: FilterableGridComponent;
+  let fixture: ComponentFixture<FilterableGridComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ NgFilterableGridComponent ]
+      declarations: [ FilterableGridComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(NgFilterableGridComponent);
+    fixture = TestBed.createComponent(FilterableGridComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

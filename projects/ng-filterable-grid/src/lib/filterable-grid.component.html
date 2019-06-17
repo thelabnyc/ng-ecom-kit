@@ -1,0 +1,14 @@
+<button (click)="clearAllFilters.emit()">Clear Filters</button>
+<button (click)="toggleFilterAttribute.emit(1)">Filter Something</button>
+<button (click)="setSortBy.emit(1)">
+  Set Sort Price low to high
+</button>
+<button (click)="setSortBy.emit(2)">
+  Set Sort Price high to low
+</button>
+<ng-container *ngFor="let product of products">
+  <div *ngIf="product.productmeta.show_in_grid" class="products__list-item">
+    {{ product.title }}
+    <ng-content></ng-content>
+  </div>
+</ng-container>

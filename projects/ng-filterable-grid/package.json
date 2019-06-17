@@ -1,5 +1,5 @@
 {
-  "name": "ng-filterable-grid",
+  "name": "@ng-ecom-kit/ng-filterable-grid",
   "version": "0.0.1",
   "peerDependencies": {
     "@angular/common": "^8.0.1",
