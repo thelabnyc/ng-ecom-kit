@@ -4,4 +4,4 @@ test:
   script:
     - apk add --update --no-cache chromium-chromedriver chromium
     - yarn install --frozen-lockfile
-    - yarn test --browsers=ChromiumCI
+    - yarn test --browsers=ChromiumCI --progress false --watch=false
