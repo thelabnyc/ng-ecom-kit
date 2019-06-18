@@ -20,6 +20,12 @@ module.exports = function (config) {
       reports: ['html', 'lcovonly'],
       fixWebpackSourcePaths: true
     },
+    customLaunchers: {
+      ChromiumCI: {
+        base: 'ChromiumHeadless',
+        flags: ['--no-sandbox', '--disable-dev-shm-usage']
+      }
+    },
     reporters: ['progress', 'kjhtml'],
     port: 9876,
     colors: true,
