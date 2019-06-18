@@ -1,0 +1,7 @@
+FROM node:10-alpine
+
+test:
+  script:
+    - apk add --update --no-cache chromium-chromedriver chromium
+    - yarn install --frozen-lockfile
+    - yarn test
