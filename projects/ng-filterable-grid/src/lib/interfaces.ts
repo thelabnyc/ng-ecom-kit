@@ -35,7 +35,7 @@ export interface IProduct {
   title: string;
   handle: string;
   body_html: string;
-  created_at: Date;
+  created_at: string;
   variant_set: IVariant[];
   productmeta: {
     product_type_fk: number | null;

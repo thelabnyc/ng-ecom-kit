@@ -124,10 +124,13 @@ export const filteredProducts = (
 
 export const filterProductsCount = (products: IProduct[]) => products.length;
 
-export const filteredSortedProducts = (products, sortBy) => {
-  if (sortBy === "Newest") {
+export const filteredSortedProducts = (products: IProduct[], sortBy) => {
+  if (sortBy === 'Newest') {
     return products.sort((productA, productB) => {
-      return new Date(productB.created_at).getTime() - new Date(productA.created_at).getTime();
+      return (
+        new Date(productB.created_at).getTime() -
+        new Date(productA.created_at).getTime()
+      );
     });
   } else if (sortBy === 'Price: High to Low') {
     return products.sort((productA, productB) => {

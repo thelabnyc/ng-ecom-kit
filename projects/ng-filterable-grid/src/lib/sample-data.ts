@@ -5,7 +5,7 @@ export const sampleProduct: IProduct = {
   title: 'Squeaker',
   handle: 'handle',
   body_html: 'string',
-  created_at: new Date('2018-12-13T15:50:57Z'),
+  created_at: '2018-12-13T15:50:57Z',
   variant_set: [
     {
       id: 10,
@@ -126,7 +126,7 @@ export const sampleProduct2: IProduct = {
   title: 'Cricket',
   handle: 'handle-cricket',
   body_html: 'string',
-  created_at: new Date('2019-12-13T15:50:57Z'),
+  created_at: '2019-12-13T15:50:57Z',
   variant_set: [
     {
       id: 150,
