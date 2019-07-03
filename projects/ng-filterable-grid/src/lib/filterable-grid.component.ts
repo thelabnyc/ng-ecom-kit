@@ -4,7 +4,6 @@ import { IProduct, SortBy } from './interfaces';
 @Component({
   selector: 'grid-filterable-grid',
   templateUrl: './filterable-grid.component.html',
-  styles: []
 })
 export class FilterableGridComponent {
   @Input() products: IProduct[];

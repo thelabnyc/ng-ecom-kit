@@ -1,9 +1,9 @@
 <button (click)="clearAllFilters.emit()">Clear Filters</button>
 <button (click)="toggleFilterAttribute.emit(1)">Filter Something</button>
-<button (click)="setSortBy.emit(1)">
+<button (click)="setSortBy.emit('Price: Low to High')">
   Set Sort Price low to high
 </button>
-<button (click)="setSortBy.emit(2)">
+<button (click)="setSortBy.emit('Price: High to Low')">
   Set Sort Price high to low
 </button>
 <ng-container *ngFor="let product of products">

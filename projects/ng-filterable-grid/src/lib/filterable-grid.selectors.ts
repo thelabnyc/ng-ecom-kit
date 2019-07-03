@@ -1,4 +1,4 @@
-import { SortBy, IProduct } from './interfaces';
+import { IProduct } from './interfaces';
 
 function flatten(arr) {
   return arr.reduce(function(flat, toFlatten) {
@@ -125,18 +125,18 @@ export const filteredProducts = (
 export const filterProductsCount = (products: IProduct[]) => products.length;
 
 export const filteredSortedProducts = (products, sortBy) => {
-  if (sortBy === SortBy.Newest) {
+  if (sortBy === "Newest") {
     return products.sort((productA, productB) => {
-      return productB.created_at.getTime() - productA.created_at.getTime();
+      return new Date(productB.created_at).getTime() - new Date(productA.created_at).getTime();
     });
-  } else if (sortBy === SortBy['Price: High to Low']) {
+  } else if (sortBy === 'Price: High to Low') {
     return products.sort((productA, productB) => {
       if (productB.variant_set.length && productA.variant_set.length) {
         return productB.variant_set[0].price - productA.variant_set[0].price;
       }
       return 0;
     });
-  } else if (sortBy === SortBy['Price: Low to High']) {
+  } else if (sortBy === 'Price: Low to High') {
     return products.sort((productA, productB) => {
       if (productB.variant_set.length && productA.variant_set.length) {
         return productA.variant_set[0].price - productB.variant_set[0].price;

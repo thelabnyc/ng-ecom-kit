@@ -12,11 +12,7 @@ interface IProductOptionValue {
   display_as: string;
 }
 
-export enum SortBy {
-  'Newest',
-  'Price: Low to High',
-  'Price: High to Low'
-}
+export type SortBy = 'Newest' | 'Price: Low to High' | 'Price: High to Low';
 
 export interface IVariant {
   id: number;
