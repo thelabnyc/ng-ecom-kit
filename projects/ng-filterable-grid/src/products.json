@@ -4,7 +4,6 @@
       "id": 1,
       "title": "A",
       "handle": "a",
-      "body_html": "",
       "created_at": "2019-11-14T20:42:49Z",
       "variant_set": [
         {
@@ -67,7 +66,6 @@
       "id": 2,
       "title": "Low X",
       "handle": "low-x",
-      "body_html": "",
       "created_at": "2018-11-14T20:42:49Z",
       "variant_set": [
         {
