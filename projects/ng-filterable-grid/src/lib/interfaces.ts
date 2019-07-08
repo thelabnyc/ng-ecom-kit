@@ -18,7 +18,7 @@ export interface IVariant<Meta extends {} = {}> {
   id: number;
   title: string;
   price: string;
-  compare_at_price: string;
+  compare_at_price: string | null;
   variantmeta: Meta;
   position: number;
   variantoptionvalue_set: IVariantOptionValue[];
