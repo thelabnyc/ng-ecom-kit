@@ -11,6 +11,7 @@ export const sampleProduct: IProduct = {
       id: 10,
       title: 'Squeaker - Blue Hair',
       price: '199',
+      compare_at_price: null,
       variantmeta: {
         back_ordered: false,
         out_of_stock: false,
@@ -26,6 +27,7 @@ export const sampleProduct: IProduct = {
       id: 82,
       title: 'Squeaker - Champagne',
       price: '499',
+      compare_at_price: null,
       variantmeta: {
         back_ordered: false,
         out_of_stock: false,
@@ -41,6 +43,7 @@ export const sampleProduct: IProduct = {
       id: 117,
       title: 'Squeaker - Spectra',
       price: '239',
+      compare_at_price: null,
       variantmeta: {
         back_ordered: false,
         out_of_stock: false,
@@ -56,6 +59,7 @@ export const sampleProduct: IProduct = {
       id: 1230,
       title: 'Squeaker - Blue Water',
       price: '199',
+      compare_at_price: null,
       variantmeta: {
         back_ordered: false,
         out_of_stock: false,
@@ -71,6 +75,7 @@ export const sampleProduct: IProduct = {
       id: 146,
       title: 'Squeaker - Champagne',
       price: '499',
+      compare_at_price: null,
       variantmeta: {
         back_ordered: false,
         out_of_stock: false,
@@ -86,6 +91,7 @@ export const sampleProduct: IProduct = {
       id: 195,
       title: 'Squeaker - Spectra',
       price: '239',
+      compare_at_price: null,
       variantmeta: {
         back_ordered: false,
         out_of_stock: false,
@@ -101,6 +107,7 @@ export const sampleProduct: IProduct = {
       id: 235,
       title: 'Squeaker - Spectra',
       price: '239',
+      compare_at_price: null,
       variantmeta: {
         back_ordered: false,
         out_of_stock: false,
@@ -132,6 +139,7 @@ export const sampleProduct2: IProduct = {
       id: 150,
       title: 'Cricket - Standard',
       price: '49',
+      compare_at_price: null,
       variantmeta: {
         back_ordered: false,
         out_of_stock: false,

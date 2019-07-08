@@ -14,35 +14,30 @@ interface IProductOptionValue {
 
 export type SortBy = 'Newest' | 'Price: Low to High' | 'Price: High to Low';
 
-export interface IVariant {
+export interface IVariant<Meta extends {} = {}> {
   id: number;
   title: string;
-  price: any;
-  variantmeta: {
-    saleprice: any | null;
-    back_ordered: boolean;
-    out_of_stock: boolean;
-    colorswatchimage: string | null;
-    glassesimage: string | null;
-    show_in_grid: boolean;
-  } | null;
+  price: string;
+  compare_at_price: string;
+  variantmeta: Meta;
   position: number;
   variantoptionvalue_set: IVariantOptionValue[];
 }
 
-export interface IProduct {
+interface ProductMeta {
+  product_type_fk: number;
+  productoptionvalue_set: IProductOptionValue[];
+  [key: string]: any;
+}
+
+export interface IProduct<Meta extends ProductMeta = ProductMeta> {
   id: number;
   title: string;
   handle: string;
   body_html: string;
   created_at: string;
   variant_set: IVariant[];
-  productmeta: {
-    product_type_fk: number | null;
-    altimage: string;
-    productoptionvalue_set: IProductOptionValue[];
-    show_in_grid: boolean;
-  };
+  productmeta: Meta;
 }
 
 export interface IProductTypeVariantOption {
