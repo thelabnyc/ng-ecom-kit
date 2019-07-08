@@ -135,14 +135,20 @@ export const filteredSortedProducts = (products: IProduct[], sortBy) => {
   } else if (sortBy === 'Price: High to Low') {
     return products.sort((productA, productB) => {
       if (productB.variant_set.length && productA.variant_set.length) {
-        return productB.variant_set[0].price - productA.variant_set[0].price;
+        return (
+          parseInt(productB.variant_set[0].price, 10) -
+          parseInt(productA.variant_set[0].price, 10)
+        );
       }
       return 0;
     });
   } else if (sortBy === 'Price: Low to High') {
     return products.sort((productA, productB) => {
       if (productB.variant_set.length && productA.variant_set.length) {
-        return productA.variant_set[0].price - productB.variant_set[0].price;
+        return (
+          parseInt(productA.variant_set[0].price, 10) -
+          parseInt(productB.variant_set[0].price, 10)
+        );
       }
       return 0;
     });
