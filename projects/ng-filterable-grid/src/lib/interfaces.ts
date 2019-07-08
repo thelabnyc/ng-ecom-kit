@@ -24,7 +24,7 @@ export interface IVariant<Meta extends {} = {}> {
   variantoptionvalue_set: IVariantOptionValue[];
 }
 
-interface ProductMeta {
+export interface ProductMeta {
   product_type_fk: number;
   productoptionvalue_set: IProductOptionValue[];
   [key: string]: any;
