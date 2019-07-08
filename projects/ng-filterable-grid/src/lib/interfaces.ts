@@ -37,7 +37,6 @@ export interface IProduct<
   id: number;
   title: string;
   handle: string;
-  body_html: string;
   created_at: string;
   variant_set: Variant[];
   productmeta: Meta;
