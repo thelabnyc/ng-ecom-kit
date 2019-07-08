@@ -1,95 +1,98 @@
 {
-  "products":
-[
-  {
-    "id": 1,
-    "title": "A",
-    "handle": "a",
-    "body_html": "",
-    "created_at": "2019-11-14T20:42:49Z",
-    "variant_set": [
-      {
-        "id": 154574974054,
-        "title": "Red",
-        "position": 1,
-        "price": "199.00",
-        "variantmeta": {
-          "back_ordered": false,
-          "out_of_stock": false,
-          "saleprice": null,
-          "colorswatchimage": null,
-          "glassesimage": null,
-          "show_in_grid": true
+  "products": [
+    {
+      "id": 1,
+      "title": "A",
+      "handle": "a",
+      "body_html": "",
+      "created_at": "2019-11-14T20:42:49Z",
+      "variant_set": [
+        {
+          "id": 154574974054,
+          "title": "Red",
+          "position": 1,
+          "price": "199.00",
+          "compare_at_price": null,
+          "variantmeta": {
+            "back_ordered": false,
+            "out_of_stock": false,
+            "saleprice": null,
+            "colorswatchimage": null,
+            "glassesimage": null,
+            "show_in_grid": true
+          },
+          "variantoptionvalue_set": [{ "id": 1, "value": 1, "display_as": "" }]
         },
-        "variantoptionvalue_set": [{ "id": 1, "value": 1, "display_as": "" }]
-      },
-      {
-        "id": 1545749022,
-        "title": "water Serilium",
-        "position": 2,
-        "price": "199.00",
-        "variantmeta": {
-          "back_ordered": false,
-          "out_of_stock": false,
-          "saleprice": null,
-          "colorswatchimage": null,
-          "glassesimage": null,
-          "show_in_grid": true
+        {
+          "id": 1545749022,
+          "title": "water Serilium",
+          "position": 2,
+          "price": "199.00",
+          "compare_at_price": null,
+          "variantmeta": {
+            "back_ordered": false,
+            "out_of_stock": false,
+            "saleprice": null,
+            "colorswatchimage": null,
+            "glassesimage": null,
+            "show_in_grid": true
+          },
+          "variantoptionvalue_set": []
         },
-        "variantoptionvalue_set": []
-      },
-      {
-        "id": 15457490239590,
-        "title": "Black / Blue water Serilium",
-        "position": 3,
-        "price": "199.00",
-        "variantmeta": {
-          "back_ordered": false,
-          "out_of_stock": false,
-          "saleprice": null,
-          "colorswatchimage": null,
-          "glassesimage": null,
-          "show_in_grid": true
-        },
-        "variantoptionvalue_set": []
+        {
+          "id": 15457490239590,
+          "title": "Black / Blue water Serilium",
+          "position": 3,
+          "price": "199.00",
+          "compare_at_price": null,
+          "variantmeta": {
+            "back_ordered": false,
+            "out_of_stock": false,
+            "saleprice": null,
+            "colorswatchimage": null,
+            "glassesimage": null,
+            "show_in_grid": true
+          },
+          "variantoptionvalue_set": []
+        }
+      ],
+      "productmeta": {
+        "product_type_fk": 1,
+        "productoptionvalue_set": [],
+        "altimage": "",
+        "show_in_grid": true
       }
-    ],
-    "productmeta": {
-      "product_type_fk": 1,
-      "productoptionvalue_set": [],
-      "altimage": "",
-      "show_in_grid": true
-    }
-  },
-  {
-    "id": 2,
-    "title": "Low X",
-    "handle": "low-x",
-    "body_html": "",
-    "created_at": "2018-11-14T20:42:49Z",
-    "variant_set": [
-      {
-        "id": 154549174054,
-        "position": 1,
-        "title": "Red cool",
-        "price": "9.00",
-        "variantmeta": {
-          "back_ordered": false,
-          "out_of_stock": false,
-          "saleprice": null,
-          "colorswatchimage": null,
-          "glassesimage": null,
-          "show_in_grid": true
-        },
-        "variantoptionvalue_set": []
+    },
+    {
+      "id": 2,
+      "title": "Low X",
+      "handle": "low-x",
+      "body_html": "",
+      "created_at": "2018-11-14T20:42:49Z",
+      "variant_set": [
+        {
+          "id": 154549174054,
+          "position": 1,
+          "title": "Red cool",
+          "price": "9.00",
+          "compare_at_price": null,
+          "variantmeta": {
+            "back_ordered": false,
+            "out_of_stock": false,
+            "saleprice": null,
+            "colorswatchimage": null,
+            "glassesimage": null,
+            "show_in_grid": true
+          },
+          "variantoptionvalue_set": []
+        }
+      ],
+      "productmeta": {
+        "product_type_fk": 1,
+        "productoptionvalue_set": [],
+        "altimage": "",
+        "show_in_grid": true
       }
-    ],
-    "productmeta": {
-      "product_type_fk": 1,
-      "productoptionvalue_set": [],
-      "altimage": "",
-      "show_in_grid": true
     }
-  }
-]
+  ]
 }
