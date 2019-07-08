@@ -6,7 +6,7 @@ import {
 } from '@ngrx/store';
 import { createSelector } from '@ngrx/store';
 import { environment } from '../../environments/environment';
-import { IProduct } from 'ng-filterable-grid/lib/interfaces';
+import { IProduct } from 'projects/ng-filterable-grid/src/lib/interfaces';
 import {
   sampleProduct,
   sampleProduct2
