@@ -8,7 +8,9 @@ A collection of ngrx selector functions and interfaces to display a grid. We don
 
 ## NG Yotpo
 
-Angular wrapper around Yotpo's JS Widget
+[ng-yotpo](projects/ng-yotpo)
+
+Angular wrapper around Yotpo's JS Widget.
 
 ## Development server
 
