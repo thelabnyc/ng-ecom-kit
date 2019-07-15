@@ -140,6 +140,39 @@
           }
         }
       }
+    },
+    "ng-yotpo": {
+      "projectType": "library",
+      "root": "projects/ng-yotpo",
+      "sourceRoot": "projects/ng-yotpo/src",
+      "prefix": "yotpo",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-ng-packagr:build",
+          "options": {
+            "tsConfig": "projects/ng-yotpo/tsconfig.lib.json",
+            "project": "projects/ng-yotpo/ng-package.json"
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/ng-yotpo/src/test.ts",
+            "tsConfig": "projects/ng-yotpo/tsconfig.spec.json",
+            "karmaConfig": "projects/ng-yotpo/karma.conf.js"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "projects/ng-yotpo/tsconfig.lib.json",
+              "projects/ng-yotpo/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**"]
+          }
+        }
+      }
     }
   },
   "defaultProject": "ng-ecom-kit"

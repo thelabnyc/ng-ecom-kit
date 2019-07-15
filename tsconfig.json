@@ -26,6 +26,12 @@
       ],
       "ng-filterable-grid/*": [
         "dist/ng-filterable-grid/*"
+      ],
+      "ng-yotpo": [
+        "dist/ng-yotpo"
+      ],
+      "ng-yotpo/*": [
+        "dist/ng-yotpo/*"
       ]
     }
   }

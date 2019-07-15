@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { ListingComponent } from './listing/listing.component';
 import { GridComponent } from './grid/grid.component';
+import { YotpoComponent } from './yotpo/yotpo.component';
 
 const routes: Routes = [
   {
@@ -11,6 +12,10 @@ const routes: Routes = [
   {
     path: 'grid',
     component: GridComponent
+  },
+  {
+    path: 'yotpo',
+    component: YotpoComponent
   }
 ];
 
