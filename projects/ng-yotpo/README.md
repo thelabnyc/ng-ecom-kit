@@ -7,6 +7,26 @@ Use Yotpo widgets in Angular.
 1. `npm i @ng-ecom-kit/ng-yotpo`
 2. Add `NgYotpoModule.forRoot({apiKey: 'your-key'})` to your AppModule's imports.
 
+# Usage
+
+## Reviews Widget
+
+```
+<yotpo-reviews-widget
+    productId="1"
+    price="1.50"
+    name="Example Product"
+    url="www.example.com"
+    imageUrl=""
+    description="Something by Example"
+></yotpo-reviews-widget>
+
+```
+
+## Star Ratings
+
+`<yotpo-star-rating productId="1"></yotpo-star-rating>`
+
 # Development
 
 This library was generated with [Angular CLI](https://github.com/angular/angular-cli) version 8.1.1.
