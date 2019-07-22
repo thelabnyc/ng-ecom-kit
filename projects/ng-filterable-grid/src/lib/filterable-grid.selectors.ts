@@ -133,24 +133,30 @@ export const filteredSortedProducts = (products: IProduct[], sortBy) => {
       );
     });
   } else if (sortBy === 'Price: High to Low') {
-    return products.sort((productA, productB) => {
-      if (productB.variant_set.length && productA.variant_set.length) {
-        return (
-          parseInt(productB.variant_set[0].price, 10) -
-          parseInt(productA.variant_set[0].price, 10)
-        );
-      }
-      return 0;
-    });
+      return products.sort((productA, productB) => {
+        if (productB.variant_set.length && productA.variant_set.length) {
+          const productAReduced = productA.variant_set.reduce(
+            (acc, product) => parseInt(product.price, 10) > acc ? acc = parseInt(product.price, 10) : acc, 0);
+          const productBReduced = productB.variant_set.reduce(
+            (acc, product) => parseInt(product.price, 10) > acc ? acc = parseInt(product.price, 10) : acc, 0);
+
+          return productBReduced - productAReduced;
+        }
+      });
   } else if (sortBy === 'Price: Low to High') {
     return products.sort((productA, productB) => {
       if (productB.variant_set.length && productA.variant_set.length) {
-        return (
-          parseInt(productA.variant_set[0].price, 10) -
-          parseInt(productB.variant_set[0].price, 10)
-        );
+        const productAReduced = productA.variant_set.reduce(
+          (acc, product) => acc ?
+            (parseInt(product.price, 10) < acc ? acc = parseInt(product.price, 10) : acc)
+            : parseInt(product.price, 10), 0);
+        const productBReduced = productB.variant_set.reduce(
+          (acc, product) => acc ?
+            (parseInt(product.price, 10) < acc ? acc = parseInt(product.price, 10) : acc)
+            : parseInt(product.price, 10), 0);
+
+        return productAReduced - productBReduced;
       }
-      return 0;
     });
   }
   return products;
