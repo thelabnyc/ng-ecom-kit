@@ -3,6 +3,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { ListingComponent } from './listing/listing.component';
 import { GridComponent } from './grid/grid.component';
 import { YotpoComponent } from './yotpo/yotpo.component';
+import { CartComponent } from './cart/cart.component';
 
 const routes: Routes = [
   {
@@ -16,6 +17,10 @@ const routes: Routes = [
   {
     path: 'yotpo',
     component: YotpoComponent
+  },
+  {
+    path: 'cart',
+    component: CartComponent
   }
 ];
 

@@ -10,11 +10,16 @@ import {
   styleUrls: ['./yotpo.component.scss']
 })
 export class YotpoComponent {
-  product = sampleProduct;
+  product;
+  ratingId: number;
 
   constructor() {
     setTimeout(() => {
+      this.product = sampleProduct;
+    }, 1000);
+    setTimeout(() => {
       this.product = sampleProduct2;
     }, 5000);
+    setTimeout(() => (this.ratingId = 5), 3000);
   }
 }

@@ -173,6 +173,39 @@
           }
         }
       }
+    },
+    "ng-shopify-cart": {
+      "projectType": "library",
+      "root": "projects/ng-shopify-cart",
+      "sourceRoot": "projects/ng-shopify-cart/src",
+      "prefix": "shop-cart",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-ng-packagr:build",
+          "options": {
+            "tsConfig": "projects/ng-shopify-cart/tsconfig.lib.json",
+            "project": "projects/ng-shopify-cart/ng-package.json"
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/ng-shopify-cart/src/test.ts",
+            "tsConfig": "projects/ng-shopify-cart/tsconfig.spec.json",
+            "karmaConfig": "projects/ng-shopify-cart/karma.conf.js"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "projects/ng-shopify-cart/tsconfig.lib.json",
+              "projects/ng-shopify-cart/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**"]
+          }
+        }
+      }
     }
   },
   "defaultProject": "ng-ecom-kit"

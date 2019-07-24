@@ -12,13 +12,24 @@ import { GridComponent } from './grid/grid.component';
 import { reducers, metaReducers } from './reducers';
 import { environment } from '../environments/environment';
 import { YotpoComponent } from './yotpo/yotpo.component';
+import { EffectsModule } from '@ngrx/effects';
+import { AppEffects } from './app.effects';
+import { CartComponent } from './cart/cart.component';
+import { NgShopifyCartModule } from 'projects/ng-shopify-cart/src/public-api';
 
 @NgModule({
-  declarations: [AppComponent, ListingComponent, GridComponent, YotpoComponent],
+  declarations: [
+    AppComponent,
+    ListingComponent,
+    GridComponent,
+    YotpoComponent,
+    CartComponent
+  ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     NgFilterableGridModule,
+    NgShopifyCartModule.forRoot({}),
     NgYotpoModule.forRoot({
       apiKey: 'enter-key-here'
     }),
@@ -26,7 +37,8 @@ import { YotpoComponent } from './yotpo/yotpo.component';
     StoreDevtoolsModule.instrument({
       maxAge: 25,
       logOnly: environment.production
-    })
+    }),
+    EffectsModule.forRoot([AppEffects])
   ],
   providers: [],
   bootstrap: [AppComponent]
