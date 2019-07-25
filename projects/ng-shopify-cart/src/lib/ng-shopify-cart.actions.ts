@@ -1,9 +1,10 @@
 import { createAction, props } from '@ngrx/store';
 import { CheckoutCreate } from './generated/graphql';
+import { IVariantIdQuantity } from './interfaces';
 
 export const addToCheckout = createAction(
   '[EcomKit/shop-cart] Add To Checkout',
-  props<{ variantId: number; quantity: number }>()
+  props<IVariantIdQuantity>()
 );
 export const addToCheckoutFailure = createAction(
   '[EcomKit/shop-cart] Add To Checkout Failure'
@@ -27,7 +28,7 @@ export const applyCouponSuccess = createAction(
 );
 export const removeLineItem = createAction(
   '[EcomKit/shop-cart] Remove Line Item from Cart',
-  props<{ variantId: string; quantity: number }>()
+  props<IVariantIdQuantity>()
 );
 export const removeLineItemFailure = createAction(
   '[EcomKit/shop-cart] Remove Line Item from Cart Failure'
@@ -35,14 +36,14 @@ export const removeLineItemFailure = createAction(
 export const clearCart = createAction('[EcomKit/shop-cart] Clear Cart');
 export const incrementLineItemQuantity = createAction(
   '[EcomKit/shop-cart] Increment Line Item Quantity on Cart',
-  props<{ variantId: string; quantity: number }>()
+  props<IVariantIdQuantity>()
 );
 export const incrementLineItemQuantityFailure = createAction(
   '[EcomKit/shop-cart] Increment Line Item Quantity on Cart Failure'
 );
 export const decrementLineItemQuantity = createAction(
   '[EcomKit/shop-cart] Decrement Line Item Quantity on Cart',
-  props<{ variantId: string; quantity: number }>()
+  props<IVariantIdQuantity>()
 );
 export const decrementLineItemQuantityFailure = createAction(
   '[EcomKit/shop-cart] Decrement Line Item Quantity on Cart Failure'

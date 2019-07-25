@@ -8,7 +8,7 @@ Shopify Cart.
 2. Add `NgShopifyCartModule.forRoot({refreshCartAction: yourActionToRefreshCart, selectUserAccessToken: your-selector})` to your app.modules.
 
 - refreshCartAction: Actual to update the cart on. This could be an init action, page router, or something on a timer. You should minimally run this at least on page load.
-- selectUserAccessToken: (optional) A ngrx selector function that returns your shopify user access token for the storefront API. If you do not need to associate a shopify Checkout with a user, you may leave this blank.
+- selectUserAccessToken: (optional) A function that accepts the state and returns your shopify user access token for the storefront API. If you do not need to associate a shopify Checkout with a user, you may leave this blank.
 
 Adding the shopify storefront api header is not supported by this package at this time (you can use a angular interceptor for this)
 

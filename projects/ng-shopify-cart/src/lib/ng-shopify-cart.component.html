@@ -1,0 +1,57 @@
+<section class="l-body">
+  <ng-template [ngIf]="itemCount" [ngIfElse]="emptyCart">
+    <div class="cart-title">Shopping Cart ({{ itemCount }} Items)</div>
+  </ng-template>
+
+  <ng-template #emptyCart>
+    <div class="cart-title">Shopping Cart (0 Items)</div>
+  </ng-template>
+
+  <div *ngIf="itemCount" class="shipping-banner">
+    A Message could go here
+  </div>
+  <div *ngIf="itemCount" class="cart-container">
+    <div class="cart-label-container">
+      <div>
+        Item
+      </div>
+      <div>
+        Price
+      </div>
+      <div>
+        Quantity
+      </div>
+      <div>
+        Subtotal
+      </div>
+    </div>
+    <div class="cart-items-container">
+      <!-- <app-line-items
+        [lineItems]="checkoutLineItems$ | async"
+        (removeLineItem)="removeLineItem($event)"
+        (incrementQuantity)="incrementQuantity($event)"
+        (decrementQuantity)="decrementQuantity($event)"
+      >
+      </app-line-items> -->
+    </div>
+    <div class="cart-total-container">
+      <div class="cart-total-subtotal">
+        <div class="subtotal">
+          subtotal
+        </div>
+        <div>
+          <b>{{ subtotal | currency }}</b>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="itemCount" class="checkout-button-container">
+    <a class="checkout-button" [href]="checkoutUrl">
+      Checkout
+    </a>
+  </div>
+  <!-- if cart is empty -->
+  <div *ngIf="!(checkoutItemCount$ | async)" class="empty-cart-container">
+    Cart is Empty
+  </div>
+</section>

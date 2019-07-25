@@ -16,6 +16,8 @@ import { EffectsModule } from '@ngrx/effects';
 import { AppEffects } from './app.effects';
 import { CartComponent } from './cart/cart.component';
 import { NgShopifyCartModule } from 'projects/ng-shopify-cart/src/public-api';
+import { GraphQLModule } from './graphql.module';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -38,7 +40,9 @@ import { NgShopifyCartModule } from 'projects/ng-shopify-cart/src/public-api';
       maxAge: 25,
       logOnly: environment.production
     }),
-    EffectsModule.forRoot([AppEffects])
+    EffectsModule.forRoot([AppEffects]),
+    GraphQLModule,
+    HttpClientModule
   ],
   providers: [],
   bootstrap: [AppComponent]
