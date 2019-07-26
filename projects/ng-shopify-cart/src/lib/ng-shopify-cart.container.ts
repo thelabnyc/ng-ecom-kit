@@ -13,7 +13,7 @@ import {
   selectCheckoutUrl,
   selectCheckoutItemCount
 } from './ng-shopify-cart.selectors';
-import { IVariantIdQuantity } from './interfaces';
+import { IVariantShopifyIdQuantity } from './interfaces';
 
 @Component({
   selector: 'shop-cart-cart-container',
@@ -45,13 +45,13 @@ export class NgShopifyCartContainer {
   applyCoupon() {
     this.store.dispatch(applyCoupon(this.form.value.code));
   }
-  removeLineItem(lineItem: IVariantIdQuantity) {
+  removeLineItem(lineItem: IVariantShopifyIdQuantity) {
     this.store.dispatch(removeLineItem(lineItem));
   }
-  incrementQuantity(lineItem: IVariantIdQuantity) {
+  incrementQuantity(lineItem: IVariantShopifyIdQuantity) {
     this.store.dispatch(incrementLineItemQuantity(lineItem));
   }
-  decrementQuantity(lineItem: IVariantIdQuantity) {
+  decrementQuantity(lineItem: IVariantShopifyIdQuantity) {
     if (lineItem.quantity === 1) {
       this.store.dispatch(removeLineItem(lineItem));
     } else {
