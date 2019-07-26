@@ -51,7 +51,7 @@
     </a>
   </div>
   <!-- if cart is empty -->
-  <div *ngIf="!(checkoutItemCount$ | async)" class="empty-cart-container">
+  <div *ngIf="!itemCount" class="empty-cart-container">
     Cart is Empty
   </div>
 </section>
