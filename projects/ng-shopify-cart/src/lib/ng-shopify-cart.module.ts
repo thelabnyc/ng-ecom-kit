@@ -15,7 +15,6 @@ import { NgShopifyCartContainer } from './ng-shopify-cart.container';
     CommonModule,
     StoreModule.forFeature('cart', reducer),
     EffectsModule.forFeature([CartEffects]),
-    ReactiveFormsModule
   ],
   exports: [NgShopifyCartComponent, NgShopifyCartContainer]
 })

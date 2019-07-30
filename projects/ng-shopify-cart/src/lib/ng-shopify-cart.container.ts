@@ -1,5 +1,4 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Store, select } from '@ngrx/store';
 import {
   applyCoupon,
@@ -32,9 +31,6 @@ import { IVariantShopifyIdQuantity } from './interfaces';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NgShopifyCartContainer {
-  form = new FormGroup({
-    code: new FormControl('', Validators.required)
-  });
   checkoutLineItems$ = this.store.pipe(select(selectCheckoutLineItems));
   checkoutSubtotal$ = this.store.pipe(select(selectCheckoutSubtotal));
   checkoutUrl$ = this.store.pipe(select(selectCheckoutUrl));
