@@ -1,7 +1,6 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { Store, select } from '@ngrx/store';
 import {
-  applyCoupon,
   incrementLineItemQuantity,
   removeLineItem,
   decrementLineItemQuantity
@@ -22,7 +21,6 @@ import { IVariantShopifyIdQuantity } from './interfaces';
       [subtotal]="checkoutSubtotal$ | async"
       [checkoutUrl]="checkoutUrl$ | async"
       [itemCount]="checkoutItemCount$ | async"
-      (applyCoupon)="applyCoupon()"
       (removeLineItem)="removeLineItem($event)"
       (incrementQuantity)="incrementQuantity($event)"
       (decrementQuantity)="decrementQuantity($event)"
@@ -38,9 +36,6 @@ export class NgShopifyCartContainer {
 
   constructor(private store: Store<any>) {}
 
-  applyCoupon() {
-    this.store.dispatch(applyCoupon(this.form.value.code));
-  }
   removeLineItem(lineItem: IVariantShopifyIdQuantity) {
     this.store.dispatch(removeLineItem(lineItem));
   }
