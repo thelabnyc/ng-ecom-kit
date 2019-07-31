@@ -1,6 +1,22 @@
-import { IProduct } from './interfaces';
+import { IProduct, ProductMeta, IVariant, VariantMeta } from './interfaces';
 
-export const sampleProduct: IProduct = {
+interface TestProductMeta extends ProductMeta {
+  altimage: string | null;
+  show_in_grid: boolean;
+}
+
+interface TestVariantMeta extends VariantMeta {
+  back_ordered: boolean;
+  out_of_stock: boolean;
+  saleprice: string | null;
+  colorswatchimage: string;
+  glassesimage: string;
+  show_in_grid: boolean;
+}
+
+type TestProduct = IProduct<TestProductMeta, IVariant<TestVariantMeta>>;
+
+export const sampleProduct: TestProduct = {
   id: 1,
   title: 'Squeaker',
   handle: 'handle',
@@ -12,6 +28,7 @@ export const sampleProduct: IProduct = {
       price: '199',
       compare_at_price: null,
       variantmeta: {
+        variantoptionvalue_set: [],
         back_ordered: false,
         out_of_stock: false,
         saleprice: '299',
@@ -19,8 +36,7 @@ export const sampleProduct: IProduct = {
         glassesimage: 'https://via.placeholder.com/700x400/d38e89',
         show_in_grid: true
       },
-      position: 1,
-      variantoptionvalue_set: []
+      position: 1
     },
     {
       id: 82,
@@ -28,6 +44,7 @@ export const sampleProduct: IProduct = {
       price: '499',
       compare_at_price: null,
       variantmeta: {
+        variantoptionvalue_set: [],
         back_ordered: false,
         out_of_stock: false,
         saleprice: '99',
@@ -35,8 +52,7 @@ export const sampleProduct: IProduct = {
         glassesimage: 'https://via.placeholder.com/700x400/d38e89',
         show_in_grid: true
       },
-      position: 2,
-      variantoptionvalue_set: []
+      position: 2
     },
     {
       id: 117,
@@ -44,6 +60,7 @@ export const sampleProduct: IProduct = {
       price: '239',
       compare_at_price: null,
       variantmeta: {
+        variantoptionvalue_set: [],
         back_ordered: false,
         out_of_stock: false,
         saleprice: '',
@@ -51,8 +68,7 @@ export const sampleProduct: IProduct = {
         glassesimage: 'https://via.placeholder.com/700x400/d38e89',
         show_in_grid: true
       },
-      position: 3,
-      variantoptionvalue_set: []
+      position: 3
     },
     {
       id: 1230,
@@ -60,6 +76,7 @@ export const sampleProduct: IProduct = {
       price: '199',
       compare_at_price: null,
       variantmeta: {
+        variantoptionvalue_set: [],
         back_ordered: false,
         out_of_stock: false,
         saleprice: '299',
@@ -67,8 +84,7 @@ export const sampleProduct: IProduct = {
         glassesimage: 'https://via.placeholder.com/700x400/88b670',
         show_in_grid: true
       },
-      position: 4,
-      variantoptionvalue_set: []
+      position: 4
     },
     {
       id: 146,
@@ -76,6 +92,7 @@ export const sampleProduct: IProduct = {
       price: '499',
       compare_at_price: null,
       variantmeta: {
+        variantoptionvalue_set: [],
         back_ordered: false,
         out_of_stock: false,
         saleprice: '99',
@@ -83,8 +100,7 @@ export const sampleProduct: IProduct = {
         glassesimage: 'https://via.placeholder.com/700x400/b7b7b7',
         show_in_grid: true
       },
-      position: 5,
-      variantoptionvalue_set: []
+      position: 5
     },
     {
       id: 195,
@@ -92,6 +108,7 @@ export const sampleProduct: IProduct = {
       price: '239',
       compare_at_price: null,
       variantmeta: {
+        variantoptionvalue_set: [],
         back_ordered: false,
         out_of_stock: false,
         saleprice: '',
@@ -99,8 +116,7 @@ export const sampleProduct: IProduct = {
         glassesimage: 'https://via.placeholder.com/700x400/b2e5e5',
         show_in_grid: true
       },
-      position: 6,
-      variantoptionvalue_set: []
+      position: 6
     },
     {
       id: 235,
@@ -108,6 +124,7 @@ export const sampleProduct: IProduct = {
       price: '239',
       compare_at_price: null,
       variantmeta: {
+        variantoptionvalue_set: [],
         back_ordered: false,
         out_of_stock: false,
         saleprice: '',
@@ -115,8 +132,7 @@ export const sampleProduct: IProduct = {
         glassesimage: 'https://via.placeholder.com/700x400/916759',
         show_in_grid: true
       },
-      position: 7,
-      variantoptionvalue_set: []
+      position: 7
     }
   ],
   productmeta: {
@@ -127,7 +143,7 @@ export const sampleProduct: IProduct = {
   }
 };
 
-export const sampleProduct2: IProduct = {
+export const sampleProduct2: TestProduct = {
   id: 2,
   title: 'Cricket',
   handle: 'handle-cricket',
@@ -139,6 +155,7 @@ export const sampleProduct2: IProduct = {
       price: '49',
       compare_at_price: null,
       variantmeta: {
+        variantoptionvalue_set: [],
         back_ordered: false,
         out_of_stock: false,
         saleprice: '499',
@@ -146,8 +163,7 @@ export const sampleProduct2: IProduct = {
         glassesimage: 'https://via.placeholder.com/700x400/d38e89',
         show_in_grid: true
       },
-      position: 1,
-      variantoptionvalue_set: []
+      position: 1
     }
   ],
   productmeta: {

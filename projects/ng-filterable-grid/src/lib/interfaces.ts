@@ -14,14 +14,17 @@ interface IProductOptionValue {
 
 export type SortBy = 'Newest' | 'Price: Low to High' | 'Price: High to Low';
 
-export interface IVariant<Meta extends {} = {}> {
+export interface VariantMeta {
+  variantoptionvalue_set: IVariantOptionValue[];
+}
+
+export interface IVariant<Meta extends VariantMeta = VariantMeta> {
   id: number;
   title: string;
   price: string;
   compare_at_price: string | null;
   variantmeta: Meta;
   position: number;
-  variantoptionvalue_set: IVariantOptionValue[];
 }
 
 export interface ProductMeta {
