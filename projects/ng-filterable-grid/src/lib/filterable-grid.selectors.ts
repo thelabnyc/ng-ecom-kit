@@ -59,7 +59,7 @@ export const filteredProducts = (
       );
       const variantValues: number[] = flatten(
         product.variant_set.map(variant =>
-          variant.variantoptionvalue_set.map(value => value.value)
+          variant.variantmeta.variantoptionvalue_set.map(value => value.value)
         )
       );
       if (menuAttribute.filterProductAttribute) {
@@ -133,27 +133,47 @@ export const filteredSortedProducts = (products: IProduct[], sortBy) => {
       );
     });
   } else if (sortBy === 'Price: High to Low') {
-      return products.sort((productA, productB) => {
-        if (productB.variant_set.length && productA.variant_set.length) {
-          const productAReduced = productA.variant_set.reduce(
-            (acc, product) => parseInt(product.price, 10) > acc ? acc = parseInt(product.price, 10) : acc, 0);
-          const productBReduced = productB.variant_set.reduce(
-            (acc, product) => parseInt(product.price, 10) > acc ? acc = parseInt(product.price, 10) : acc, 0);
+    return products.sort((productA, productB) => {
+      if (productB.variant_set.length && productA.variant_set.length) {
+        const productAReduced = productA.variant_set.reduce(
+          (acc, product) =>
+            parseInt(product.price, 10) > acc
+              ? (acc = parseInt(product.price, 10))
+              : acc,
+          0
+        );
+        const productBReduced = productB.variant_set.reduce(
+          (acc, product) =>
+            parseInt(product.price, 10) > acc
+              ? (acc = parseInt(product.price, 10))
+              : acc,
+          0
+        );
 
-          return productBReduced - productAReduced;
-        }
-      });
+        return productBReduced - productAReduced;
+      }
+    });
   } else if (sortBy === 'Price: Low to High') {
     return products.sort((productA, productB) => {
       if (productB.variant_set.length && productA.variant_set.length) {
         const productAReduced = productA.variant_set.reduce(
-          (acc, product) => acc ?
-            (parseInt(product.price, 10) < acc ? acc = parseInt(product.price, 10) : acc)
-            : parseInt(product.price, 10), 0);
+          (acc, product) =>
+            acc
+              ? parseInt(product.price, 10) < acc
+                ? (acc = parseInt(product.price, 10))
+                : acc
+              : parseInt(product.price, 10),
+          0
+        );
         const productBReduced = productB.variant_set.reduce(
-          (acc, product) => acc ?
-            (parseInt(product.price, 10) < acc ? acc = parseInt(product.price, 10) : acc)
-            : parseInt(product.price, 10), 0);
+          (acc, product) =>
+            acc
+              ? parseInt(product.price, 10) < acc
+                ? (acc = parseInt(product.price, 10))
+                : acc
+              : parseInt(product.price, 10),
+          0
+        );
 
         return productAReduced - productBReduced;
       }

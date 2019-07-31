@@ -13,14 +13,16 @@
           "price": "199.00",
           "compare_at_price": null,
           "variantmeta": {
+            "variantoptionvalue_set": [
+              { "id": 1, "value": 1, "display_as": "" }
+            ],
             "back_ordered": false,
             "out_of_stock": false,
             "saleprice": null,
             "colorswatchimage": null,
             "glassesimage": null,
             "show_in_grid": true
-          },
-          "variantoptionvalue_set": [{ "id": 1, "value": 1, "display_as": "" }]
+          }
         },
         {
           "id": 1545749022,
@@ -29,14 +31,14 @@
           "price": "119.00",
           "compare_at_price": null,
           "variantmeta": {
+            "variantoptionvalue_set": [],
             "back_ordered": false,
             "out_of_stock": false,
             "saleprice": null,
             "colorswatchimage": null,
             "glassesimage": null,
             "show_in_grid": true
-          },
-          "variantoptionvalue_set": []
+          }
         },
         {
           "id": 15457490239590,
@@ -45,14 +47,14 @@
           "price": "149.00",
           "compare_at_price": null,
           "variantmeta": {
+            "variantoptionvalue_set": [],
             "back_ordered": false,
             "out_of_stock": false,
             "saleprice": null,
             "colorswatchimage": null,
             "glassesimage": null,
             "show_in_grid": true
-          },
-          "variantoptionvalue_set": []
+          }
         }
       ],
       "productmeta": {
@@ -75,14 +77,14 @@
           "price": "9.00",
           "compare_at_price": null,
           "variantmeta": {
+            "variantoptionvalue_set": [],
             "back_ordered": false,
             "out_of_stock": false,
             "saleprice": null,
             "colorswatchimage": null,
             "glassesimage": null,
             "show_in_grid": true
-          },
-          "variantoptionvalue_set": []
+          }
         }
       ],
       "productmeta": {
@@ -105,14 +107,14 @@
           "price": "119.00",
           "compare_at_price": null,
           "variantmeta": {
+            "variantoptionvalue_set": [],
             "back_ordered": false,
             "out_of_stock": false,
             "saleprice": null,
             "colorswatchimage": null,
             "glassesimage": null,
             "show_in_grid": true
-          },
-          "variantoptionvalue_set": []
+          }
         },
         {
           "id": 154549174056,
@@ -121,14 +123,14 @@
           "price": "100.00",
           "compare_at_price": null,
           "variantmeta": {
+            "variantoptionvalue_set": [],
             "back_ordered": false,
             "out_of_stock": false,
             "saleprice": null,
             "colorswatchimage": null,
             "glassesimage": null,
             "show_in_grid": true
-          },
-          "variantoptionvalue_set": []
+          }
         }
       ],
       "productmeta": {
