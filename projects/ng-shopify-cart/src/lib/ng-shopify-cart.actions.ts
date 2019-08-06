@@ -26,6 +26,8 @@ export const applyCoupon = createAction(
 export const applyCouponSuccess = createAction(
   '[EcomKit/shop-cart] Apply Coupon Success'
 );
+export const removeCoupon = createAction('[EcomKit/shop-cart] Remove Coupon');
+export const removeCouponSuccess = createAction('[EcomKit/shop-cart] Remove Coupon Success');
 export const removeLineItem = createAction(
   '[EcomKit/shop-cart] Remove Line Item from Cart',
   props<IVariantShopifyIdQuantity>()

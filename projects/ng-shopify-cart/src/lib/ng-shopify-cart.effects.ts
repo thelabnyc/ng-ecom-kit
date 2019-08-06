@@ -18,7 +18,8 @@ import {
   CheckoutDiscountCodeApplyV2GQL,
   CheckoutLineItemsReplace,
   CheckoutLineItemsReplaceGQL,
-  GetCheckoutGQL
+  GetCheckoutGQL,
+  CheckoutDiscountCodeRemoveGQL
 } from './generated/graphql';
 import {
   addToCheckout,
@@ -34,7 +35,9 @@ import {
   decrementLineItemQuantityFailure,
   clearCart,
   createCheckout,
-  createCheckoutFailure
+  createCheckoutFailure,
+  removeCoupon,
+  removeCouponSuccess
 } from './ng-shopify-cart.actions';
 import { IAppState } from './ng-shopify-cart.reducer';
 import { INgShopifyCartConfig } from './interfaces';
@@ -169,6 +172,22 @@ export class CartEffects {
       })
     )
   );
+
+  removeCoupon$ = createEffect(() => this.actions$.pipe(
+      ofType(removeCoupon),
+      withLatestFrom(this.store.pipe(select(selectCheckout))),
+      exhaustMap(([action, checkout]) => {
+        if (checkout) {
+          return this.checkoutDiscountCodeRemove
+            .mutate({
+              checkoutId: checkout.id,
+            })
+            .pipe(map(() => removeCouponSuccess()));
+        }
+        return EMPTY;
+      }
+    )
+  ));
 
   removeLineItem$ = createEffect(() =>
     this.actions$.pipe(
@@ -385,6 +404,7 @@ export class CartEffects {
     private checkoutLineItemsAdd: CheckoutLineItemsAddGQL,
     private checkoutCustomerAssociateV2: CheckoutCustomerAssociateV2GQL,
     private checkoutDiscountCodeApplyV2: CheckoutDiscountCodeApplyV2GQL,
+    private checkoutDiscountCodeRemove: CheckoutDiscountCodeRemoveGQL,
     private getCheckout: GetCheckoutGQL,
     private checkoutLineItemsReplace: CheckoutLineItemsReplaceGQL,
     @Inject('ngShopifyCartConfig') private config: INgShopifyCartConfig
