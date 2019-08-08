@@ -2,6 +2,7 @@ import { createAction, props } from '@ngrx/store';
 import { CheckoutCreate } from './generated/graphql';
 import { IVariantIdQuantity, IVariantShopifyIdQuantity } from './interfaces';
 
+export const refreshCart = createAction('[EcomKit/shop-cart] Refresh Cart');
 export const addToCheckout = createAction(
   '[EcomKit/shop-cart] Add To Checkout',
   props<IVariantIdQuantity>()
@@ -27,7 +28,9 @@ export const applyCouponSuccess = createAction(
   '[EcomKit/shop-cart] Apply Coupon Success'
 );
 export const removeCoupon = createAction('[EcomKit/shop-cart] Remove Coupon');
-export const removeCouponSuccess = createAction('[EcomKit/shop-cart] Remove Coupon Success');
+export const removeCouponSuccess = createAction(
+  '[EcomKit/shop-cart] Remove Coupon Success'
+);
 export const removeLineItem = createAction(
   '[EcomKit/shop-cart] Remove Line Item from Cart',
   props<IVariantShopifyIdQuantity>()
