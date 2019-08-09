@@ -1,0 +1,14 @@
+schema:
+  - "types/download.json"
+documents:
+  - "src/app/shopify/home.graphql"
+config: {}
+generates:
+  ./projects/ng-shopify-cart/src/lib/generated/graphql.ts:
+    config: {}
+    plugins:
+      - "typescript-common"
+      - "typescript-client"
+      - "typescript-apollo-angular"
+require: []
+

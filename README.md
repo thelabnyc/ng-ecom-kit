@@ -20,6 +20,8 @@ Angular wrapper around Yotpo's JS Widget. Has no other dependencies.
 
 [ng-shopify-cart](projects/ng-shopify-cart) is an Angular shopping cart intended to be used with Shopify and a ngrx workflow. It includes mainly the ngrx reducers and effects to work with Shopify's storefront graphql API. It does not include the styling of the actual cart interface.
 
+You can generate new queries by editing src/app/shopify/home.graphql and running `npm run graphql-codegen`
+
 ## Development server
 
 Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
