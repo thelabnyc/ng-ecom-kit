@@ -27,6 +27,7 @@ import {
   applyCoupon,
   applyCouponSuccess,
   addToCheckoutFailure,
+  addToCheckoutSuccess,
   removeLineItem,
   removeLineItemFailure,
   incrementLineItemQuantity,
@@ -74,7 +75,7 @@ export class CartEffects {
                 mutation.checkoutLineItemsAdd &&
                 mutation.checkoutLineItemsAdd.checkout
               ) {
-                return setCheckout({
+                return addToCheckoutSuccess({
                   checkout: mutation.checkoutLineItemsAdd.checkout
                 });
               }
@@ -89,7 +90,7 @@ export class CartEffects {
           return this.createCheckout(data, this.userAccessToken).pipe(
             map(createdCheckout => {
               if (createdCheckout) {
-                return setCheckout({ checkout: createdCheckout });
+                return addToCheckoutSuccess({ checkout: createdCheckout });
               }
             }),
             catchError(err => {
@@ -173,21 +174,22 @@ export class CartEffects {
     )
   );
 
-  removeCoupon$ = createEffect(() => this.actions$.pipe(
+  removeCoupon$ = createEffect(() =>
+    this.actions$.pipe(
       ofType(removeCoupon),
       withLatestFrom(this.store.pipe(select(selectCheckout))),
       exhaustMap(([action, checkout]) => {
         if (checkout) {
           return this.checkoutDiscountCodeRemove
             .mutate({
-              checkoutId: checkout.id,
+              checkoutId: checkout.id
             })
             .pipe(map(() => removeCouponSuccess()));
         }
         return EMPTY;
-      }
+      })
     )
-  ));
+  );
 
   removeLineItem$ = createEffect(() =>
     this.actions$.pipe(
