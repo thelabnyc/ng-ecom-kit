@@ -567,6 +567,41 @@
             "deprecationReason": null
           },
           {
+            "name": "productRecommendations",
+            "description": "Find recommended products related to a given `product_id`.\nTo learn more about how recommendations are generated, see\n[*Showing product recommendations on product pages*](https://help.shopify.com/themes/development/recommended-products).\n",
+            "args": [
+              {
+                "name": "productId",
+                "description": "The id of the product.",
+                "type": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "ID",
+                    "ofType": null
+                  }
+                },
+                "defaultValue": null
+              }
+            ],
+            "type": {
+              "kind": "LIST",
+              "name": null,
+              "ofType": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "Product",
+                  "ofType": null
+                }
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "productTags",
             "description": "Tags added to products.\nAdditional access scope required: unauthenticated_read_product_tags.\n",
             "args": [
@@ -599,7 +634,7 @@
           },
           {
             "name": "productTypes",
-            "description": "List of the shop’s product types.",
+            "description": "List of product types for the shop's products that are published to your app.",
             "args": [
               {
                 "name": "first",
@@ -716,6 +751,30 @@
             "deprecationReason": null
           },
           {
+            "name": "publicApiVersions",
+            "description": "The list of public Storefront API versions, including supported, release candidate and unstable versions.",
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "OBJECT",
+                    "name": "ApiVersion",
+                    "ofType": null
+                  }
+                }
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "shop",
             "description": null,
             "args": [],
@@ -740,7 +799,7 @@
       {
         "kind": "SCALAR",
         "name": "Int",
-        "description": "The `Int` scalar type represents non-fractional signed whole numeric values. Int can represent values between -(2^31) and 2^31 - 1. ",
+        "description": "The `Int` scalar type represents non-fractional signed whole numeric values. Int can represent values between -(2^31) and 2^31 - 1.",
         "fields": null,
         "inputFields": null,
         "interfaces": null,
@@ -1210,6 +1269,18 @@
             "deprecationReason": null
           },
           {
+            "name": "seo",
+            "description": "The article’s SEO information.",
+            "args": [],
+            "type": {
+              "kind": "OBJECT",
+              "name": "SEO",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "tags",
             "description": "A categorization that a article can be tagged with.",
             "args": [],
@@ -1330,12 +1401,17 @@
           },
           {
             "kind": "OBJECT",
-            "name": "ProductOption",
+            "name": "Metafield",
             "ofType": null
           },
           {
             "kind": "OBJECT",
             "name": "ProductVariant",
+            "ofType": null
+          },
+          {
+            "kind": "OBJECT",
+            "name": "ProductOption",
             "ofType": null
           },
           {
@@ -1699,7 +1775,7 @@
       {
         "kind": "SCALAR",
         "name": "URL",
-        "description": "An RFC 3986 and RFC 3987 compliant URI string.",
+        "description": "An RFC 3986 and RFC 3987 compliant URI string.\n\nExample value: `\"https://johns-apparel.myshopify.com\"`.\n",
         "fields": null,
         "inputFields": null,
         "interfaces": null,
@@ -1938,7 +2014,7 @@
       {
         "kind": "SCALAR",
         "name": "HTML",
-        "description": "A string containing HTML code.",
+        "description": "A string containing HTML code. Example value: `\"<p>Grey cotton knit sweater.</p>\"`.",
         "fields": null,
         "inputFields": null,
         "interfaces": null,
@@ -2195,10 +2271,45 @@
       {
         "kind": "SCALAR",
         "name": "DateTime",
-        "description": "An ISO-8601 encoded UTC date time string.",
+        "description": "An ISO-8601 encoded UTC date time string. Example value: `\"2019-07-03T20:47:55Z\"`.",
         "fields": null,
         "inputFields": null,
         "interfaces": null,
+        "enumValues": null,
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "SEO",
+        "description": "SEO information.",
+        "fields": [
+          {
+            "name": "description",
+            "description": "The meta description.",
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "title",
+            "description": "The SEO title.",
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          }
+        ],
+        "inputFields": null,
+        "interfaces": [],
         "enumValues": null,
         "possibleTypes": null
       },
@@ -2745,7 +2856,7 @@
         "fields": [
           {
             "name": "availableForSale",
-            "description": "Indicates if at least one product variant is available for sale.",
+            "description": "Whether the product is available on the Online Store channel and in stock.",
             "args": [],
             "type": {
               "kind": "NON_NULL",
@@ -2922,6 +3033,46 @@
             "description": "List of images associated with the product.",
             "args": [
               {
+                "name": "maxWidth",
+                "description": "Image width in pixels between 1 and 2048. This argument is deprecated: Use `maxWidth` on `Image.transformedSrc` instead.",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Int",
+                  "ofType": null
+                },
+                "defaultValue": null
+              },
+              {
+                "name": "maxHeight",
+                "description": "Image height in pixels between 1 and 2048. This argument is deprecated: Use `maxHeight` on `Image.transformedSrc` instead.",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Int",
+                  "ofType": null
+                },
+                "defaultValue": null
+              },
+              {
+                "name": "crop",
+                "description": "Crops the image according to the specified region. This argument is deprecated: Use `crop` on `Image.transformedSrc` instead.",
+                "type": {
+                  "kind": "ENUM",
+                  "name": "CropRegion",
+                  "ofType": null
+                },
+                "defaultValue": null
+              },
+              {
+                "name": "scale",
+                "description": "Image size multiplier for high-resolution retina displays. Must be between 1 and 3. This argument is deprecated: Use `scale` on `Image.transformedSrc` instead.",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Int",
+                  "ofType": null
+                },
+                "defaultValue": "1"
+              },
+              {
                 "name": "first",
                 "description": "Returns up to the first `n` elements from the list.",
                 "type": {
@@ -2980,46 +3131,6 @@
                   "ofType": null
                 },
                 "defaultValue": "POSITION"
-              },
-              {
-                "name": "maxWidth",
-                "description": "Image width in pixels between 1 and 2048. This argument is deprecated: Use `maxWidth` on `Image.transformedSrc` instead.",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Int",
-                  "ofType": null
-                },
-                "defaultValue": null
-              },
-              {
-                "name": "maxHeight",
-                "description": "Image height in pixels between 1 and 2048. This argument is deprecated: Use `maxHeight` on `Image.transformedSrc` instead.",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Int",
-                  "ofType": null
-                },
-                "defaultValue": null
-              },
-              {
-                "name": "crop",
-                "description": "Crops the image according to the specified region. This argument is deprecated: Use `crop` on `Image.transformedSrc` instead.",
-                "type": {
-                  "kind": "ENUM",
-                  "name": "CropRegion",
-                  "ofType": null
-                },
-                "defaultValue": null
-              },
-              {
-                "name": "scale",
-                "description": "Image size multiplier for high-resolution retina displays. Must be between 1 and 3. This argument is deprecated: Use `scale` on `Image.transformedSrc` instead.",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Int",
-                  "ofType": null
-                },
-                "defaultValue": "1"
               }
             ],
             "type": {
@@ -3028,6 +3139,124 @@
               "ofType": {
                 "kind": "OBJECT",
                 "name": "ImageConnection",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "metafield",
+            "description": "The metafield associated with the resource.",
+            "args": [
+              {
+                "name": "namespace",
+                "description": "Container for a set of metafields (maximum of 20 characters).",
+                "type": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "String",
+                    "ofType": null
+                  }
+                },
+                "defaultValue": null
+              },
+              {
+                "name": "key",
+                "description": "Identifier for the metafield (maximum of 30 characters).",
+                "type": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "String",
+                    "ofType": null
+                  }
+                },
+                "defaultValue": null
+              }
+            ],
+            "type": {
+              "kind": "OBJECT",
+              "name": "Metafield",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "metafields",
+            "description": "A paginated list of metafields associated with the resource.",
+            "args": [
+              {
+                "name": "namespace",
+                "description": "Container for a set of metafields (maximum of 20 characters).",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                },
+                "defaultValue": null
+              },
+              {
+                "name": "first",
+                "description": "Returns up to the first `n` elements from the list.",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Int",
+                  "ofType": null
+                },
+                "defaultValue": null
+              },
+              {
+                "name": "after",
+                "description": "Returns the elements that come after the specified cursor.",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                },
+                "defaultValue": null
+              },
+              {
+                "name": "last",
+                "description": "Returns up to the last `n` elements from the list.",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Int",
+                  "ofType": null
+                },
+                "defaultValue": null
+              },
+              {
+                "name": "before",
+                "description": "Returns the elements that come before the specified cursor.",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                },
+                "defaultValue": null
+              },
+              {
+                "name": "reverse",
+                "description": "Reverse the order of the underlying list.",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Boolean",
+                  "ofType": null
+                },
+                "defaultValue": "false"
+              }
+            ],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "MetafieldConnection",
                 "ofType": null
               }
             },
@@ -3076,6 +3305,91 @@
                     "ofType": null
                   }
                 }
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "presentmentPriceRanges",
+            "description": "List of price ranges in the presentment currencies for this shop.",
+            "args": [
+              {
+                "name": "presentmentCurrencies",
+                "description": "Specifies the presentment currencies to return a price range in.",
+                "type": {
+                  "kind": "LIST",
+                  "name": null,
+                  "ofType": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "ENUM",
+                      "name": "CurrencyCode",
+                      "ofType": null
+                    }
+                  }
+                },
+                "defaultValue": null
+              },
+              {
+                "name": "first",
+                "description": "Returns up to the first `n` elements from the list.",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Int",
+                  "ofType": null
+                },
+                "defaultValue": null
+              },
+              {
+                "name": "after",
+                "description": "Returns the elements that come after the specified cursor.",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                },
+                "defaultValue": null
+              },
+              {
+                "name": "last",
+                "description": "Returns up to the last `n` elements from the list.",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Int",
+                  "ofType": null
+                },
+                "defaultValue": null
+              },
+              {
+                "name": "before",
+                "description": "Returns the elements that come before the specified cursor.",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                },
+                "defaultValue": null
+              },
+              {
+                "name": "reverse",
+                "description": "Reverse the order of the underlying list.",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Boolean",
+                  "ofType": null
+                },
+                "defaultValue": "false"
+              }
+            ],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "ProductPriceRangeConnection",
+                "ofType": null
               }
             },
             "isDeprecated": false,
@@ -3320,50 +3634,133 @@
             "kind": "INTERFACE",
             "name": "Node",
             "ofType": null
+          },
+          {
+            "kind": "INTERFACE",
+            "name": "HasMetafields",
+            "ofType": null
           }
         ],
         "enumValues": null,
         "possibleTypes": null
       },
       {
-        "kind": "OBJECT",
-        "name": "CollectionConnection",
-        "description": null,
+        "kind": "INTERFACE",
+        "name": "HasMetafields",
+        "description": "Represents information about the metafields associated to the specified resource.",
         "fields": [
           {
-            "name": "edges",
-            "description": "A list of edges.",
-            "args": [],
-            "type": {
-              "kind": "NON_NULL",
-              "name": null,
-              "ofType": {
-                "kind": "LIST",
-                "name": null,
-                "ofType": {
+            "name": "metafield",
+            "description": "The metafield associated with the resource.",
+            "args": [
+              {
+                "name": "namespace",
+                "description": "Container for a set of metafields (maximum of 20 characters).",
+                "type": {
                   "kind": "NON_NULL",
                   "name": null,
                   "ofType": {
-                    "kind": "OBJECT",
-                    "name": "CollectionEdge",
+                    "kind": "SCALAR",
+                    "name": "String",
                     "ofType": null
                   }
-                }
+                },
+                "defaultValue": null
+              },
+              {
+                "name": "key",
+                "description": "Identifier for the metafield (maximum of 30 characters).",
+                "type": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "String",
+                    "ofType": null
+                  }
+                },
+                "defaultValue": null
               }
+            ],
+            "type": {
+              "kind": "OBJECT",
+              "name": "Metafield",
+              "ofType": null
             },
             "isDeprecated": false,
             "deprecationReason": null
           },
           {
-            "name": "pageInfo",
-            "description": "Information to aid in pagination.",
-            "args": [],
+            "name": "metafields",
+            "description": "A paginated list of metafields associated with the resource.",
+            "args": [
+              {
+                "name": "namespace",
+                "description": "Container for a set of metafields (maximum of 20 characters).",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                },
+                "defaultValue": null
+              },
+              {
+                "name": "first",
+                "description": "Returns up to the first `n` elements from the list.",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Int",
+                  "ofType": null
+                },
+                "defaultValue": null
+              },
+              {
+                "name": "after",
+                "description": "Returns the elements that come after the specified cursor.",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                },
+                "defaultValue": null
+              },
+              {
+                "name": "last",
+                "description": "Returns up to the last `n` elements from the list.",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Int",
+                  "ofType": null
+                },
+                "defaultValue": null
+              },
+              {
+                "name": "before",
+                "description": "Returns the elements that come before the specified cursor.",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                },
+                "defaultValue": null
+              },
+              {
+                "name": "reverse",
+                "description": "Reverse the order of the underlying list.",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Boolean",
+                  "ofType": null
+                },
+                "defaultValue": "false"
+              }
+            ],
             "type": {
               "kind": "NON_NULL",
               "name": null,
               "ofType": {
                 "kind": "OBJECT",
-                "name": "PageInfo",
+                "name": "MetafieldConnection",
                 "ofType": null
               }
             },
@@ -3371,188 +3768,39 @@
             "deprecationReason": null
           }
         ],
-        "inputFields": null,
-        "interfaces": [],
-        "enumValues": null,
-        "possibleTypes": null
-      },
-      {
-        "kind": "OBJECT",
-        "name": "CollectionEdge",
-        "description": null,
-        "fields": [
-          {
-            "name": "cursor",
-            "description": "A cursor for use in pagination.",
-            "args": [],
-            "type": {
-              "kind": "NON_NULL",
-              "name": null,
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
-              }
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "node",
-            "description": "The item at the end of CollectionEdge.",
-            "args": [],
-            "type": {
-              "kind": "NON_NULL",
-              "name": null,
-              "ofType": {
-                "kind": "OBJECT",
-                "name": "Collection",
-                "ofType": null
-              }
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          }
-        ],
-        "inputFields": null,
-        "interfaces": [],
-        "enumValues": null,
-        "possibleTypes": null
-      },
-      {
-        "kind": "ENUM",
-        "name": "ProductImageSortKeys",
-        "description": "The set of valid sort keys for the images query.",
-        "fields": null,
         "inputFields": null,
         "interfaces": null,
-        "enumValues": [
-          {
-            "name": "CREATED_AT",
-            "description": "Sort by the `created_at` value.",
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "POSITION",
-            "description": "Sort by the `position` value.",
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "ID",
-            "description": "Sort by the `id` value.",
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "RELEVANCE",
-            "description": "During a search (i.e. when the `query` parameter has been specified on the connection) this sorts the\nresults by relevance to the search term(s). When no search query is specified, this sort key is not\ndeterministic and should not be used.\n",
-            "isDeprecated": false,
-            "deprecationReason": null
-          }
-        ],
-        "possibleTypes": null
-      },
-      {
-        "kind": "OBJECT",
-        "name": "ImageConnection",
-        "description": null,
-        "fields": [
-          {
-            "name": "edges",
-            "description": "A list of edges.",
-            "args": [],
-            "type": {
-              "kind": "NON_NULL",
-              "name": null,
-              "ofType": {
-                "kind": "LIST",
-                "name": null,
-                "ofType": {
-                  "kind": "NON_NULL",
-                  "name": null,
-                  "ofType": {
-                    "kind": "OBJECT",
-                    "name": "ImageEdge",
-                    "ofType": null
-                  }
-                }
-              }
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "pageInfo",
-            "description": "Information to aid in pagination.",
-            "args": [],
-            "type": {
-              "kind": "NON_NULL",
-              "name": null,
-              "ofType": {
-                "kind": "OBJECT",
-                "name": "PageInfo",
-                "ofType": null
-              }
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          }
-        ],
-        "inputFields": null,
-        "interfaces": [],
         "enumValues": null,
-        "possibleTypes": null
+        "possibleTypes": [
+          {
+            "kind": "OBJECT",
+            "name": "Product",
+            "ofType": null
+          },
+          {
+            "kind": "OBJECT",
+            "name": "ProductVariant",
+            "ofType": null
+          }
+        ]
       },
       {
         "kind": "OBJECT",
-        "name": "ImageEdge",
-        "description": null,
+        "name": "Metafield",
+        "description": "Metafields represent custom metadata attached to a resource. Metafields can be sorted into namespaces and are\ncomprised of keys, values, and value types.\n",
         "fields": [
           {
-            "name": "cursor",
-            "description": "A cursor for use in pagination.",
+            "name": "description",
+            "description": "The description of a metafield.",
             "args": [],
             "type": {
-              "kind": "NON_NULL",
-              "name": null,
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
-              }
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
             },
             "isDeprecated": false,
             "deprecationReason": null
           },
-          {
-            "name": "node",
-            "description": "The item at the end of ImageEdge.",
-            "args": [],
-            "type": {
-              "kind": "NON_NULL",
-              "name": null,
-              "ofType": {
-                "kind": "OBJECT",
-                "name": "Image",
-                "ofType": null
-              }
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          }
-        ],
-        "inputFields": null,
-        "interfaces": [],
-        "enumValues": null,
-        "possibleTypes": null
-      },
-      {
-        "kind": "OBJECT",
-        "name": "ProductOption",
-        "description": "Custom product property names like \"Size\", \"Color\", and \"Material\".\nProducts are based on permutations of these options.\nA product may have a maximum of 3 options.\n255 characters limit each.\n",
-        "fields": [
           {
             "name": "id",
             "description": "Globally unique identifier.",
@@ -3570,8 +3818,8 @@
             "deprecationReason": null
           },
           {
-            "name": "name",
-            "description": "The product option’s name.",
+            "name": "key",
+            "description": "The key name for a metafield.",
             "args": [],
             "type": {
               "kind": "NON_NULL",
@@ -3586,24 +3834,64 @@
             "deprecationReason": null
           },
           {
-            "name": "values",
-            "description": "The corresponding value to the product option name.",
+            "name": "namespace",
+            "description": "The namespace for a metafield.",
             "args": [],
             "type": {
               "kind": "NON_NULL",
               "name": null,
               "ofType": {
-                "kind": "LIST",
-                "name": null,
-                "ofType": {
-                  "kind": "NON_NULL",
-                  "name": null,
-                  "ofType": {
-                    "kind": "SCALAR",
-                    "name": "String",
-                    "ofType": null
-                  }
-                }
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "parentResource",
+            "description": "The parent object that the metafield belongs to.",
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "UNION",
+                "name": "MetafieldParentResource",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "value",
+            "description": "The value of a metafield.",
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "valueType",
+            "description": "Represents the metafield value type.",
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "ENUM",
+                "name": "MetafieldValueType",
+                "ofType": null
               }
             },
             "isDeprecated": false,
@@ -3622,13 +3910,374 @@
         "possibleTypes": null
       },
       {
+        "kind": "UNION",
+        "name": "MetafieldParentResource",
+        "description": "A resource that the metafield belongs to.",
+        "fields": null,
+        "inputFields": null,
+        "interfaces": null,
+        "enumValues": null,
+        "possibleTypes": [
+          {
+            "kind": "OBJECT",
+            "name": "Product",
+            "ofType": null
+          },
+          {
+            "kind": "OBJECT",
+            "name": "ProductVariant",
+            "ofType": null
+          }
+        ]
+      },
+      {
         "kind": "OBJECT",
-        "name": "ProductPriceRange",
-        "description": "The price range of the product.",
+        "name": "ProductVariant",
+        "description": "A product variant represents a different version of a product, such as differing sizes or differing colors.",
         "fields": [
           {
-            "name": "maxVariantPrice",
-            "description": "The highest variant's price.",
+            "name": "available",
+            "description": "Indicates if the product variant is in stock.",
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "Boolean",
+              "ofType": null
+            },
+            "isDeprecated": true,
+            "deprecationReason": "Use `availableForSale` instead"
+          },
+          {
+            "name": "availableForSale",
+            "description": "Indicates if the product variant is available for sale.",
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Boolean",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "compareAtPrice",
+            "description": "The compare at price of the variant. This can be used to mark a variant as on sale, when `compareAtPrice` is higher than `price`.",
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "Money",
+              "ofType": null
+            },
+            "isDeprecated": true,
+            "deprecationReason": "Use `compareAtPriceV2` instead"
+          },
+          {
+            "name": "compareAtPriceV2",
+            "description": "The compare at price of the variant. This can be used to mark a variant as on sale, when `compareAtPriceV2` is higher than `priceV2`.",
+            "args": [],
+            "type": {
+              "kind": "OBJECT",
+              "name": "MoneyV2",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "id",
+            "description": "Globally unique identifier.",
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "ID",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "image",
+            "description": "Image associated with the product variant. This field falls back to the product image if no image is available.",
+            "args": [
+              {
+                "name": "maxWidth",
+                "description": "Image width in pixels between 1 and 2048. This argument is deprecated: Use `maxWidth` on `Image.transformedSrc` instead.",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Int",
+                  "ofType": null
+                },
+                "defaultValue": null
+              },
+              {
+                "name": "maxHeight",
+                "description": "Image height in pixels between 1 and 2048. This argument is deprecated: Use `maxHeight` on `Image.transformedSrc` instead.",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Int",
+                  "ofType": null
+                },
+                "defaultValue": null
+              },
+              {
+                "name": "crop",
+                "description": "Crops the image according to the specified region. This argument is deprecated: Use `crop` on `Image.transformedSrc` instead.",
+                "type": {
+                  "kind": "ENUM",
+                  "name": "CropRegion",
+                  "ofType": null
+                },
+                "defaultValue": null
+              },
+              {
+                "name": "scale",
+                "description": "Image size multiplier for high-resolution retina displays. Must be between 1 and 3. This argument is deprecated: Use `scale` on `Image.transformedSrc` instead.",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Int",
+                  "ofType": null
+                },
+                "defaultValue": "1"
+              }
+            ],
+            "type": {
+              "kind": "OBJECT",
+              "name": "Image",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "metafield",
+            "description": "The metafield associated with the resource.",
+            "args": [
+              {
+                "name": "namespace",
+                "description": "Container for a set of metafields (maximum of 20 characters).",
+                "type": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "String",
+                    "ofType": null
+                  }
+                },
+                "defaultValue": null
+              },
+              {
+                "name": "key",
+                "description": "Identifier for the metafield (maximum of 30 characters).",
+                "type": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "String",
+                    "ofType": null
+                  }
+                },
+                "defaultValue": null
+              }
+            ],
+            "type": {
+              "kind": "OBJECT",
+              "name": "Metafield",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "metafields",
+            "description": "A paginated list of metafields associated with the resource.",
+            "args": [
+              {
+                "name": "namespace",
+                "description": "Container for a set of metafields (maximum of 20 characters).",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                },
+                "defaultValue": null
+              },
+              {
+                "name": "first",
+                "description": "Returns up to the first `n` elements from the list.",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Int",
+                  "ofType": null
+                },
+                "defaultValue": null
+              },
+              {
+                "name": "after",
+                "description": "Returns the elements that come after the specified cursor.",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                },
+                "defaultValue": null
+              },
+              {
+                "name": "last",
+                "description": "Returns up to the last `n` elements from the list.",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Int",
+                  "ofType": null
+                },
+                "defaultValue": null
+              },
+              {
+                "name": "before",
+                "description": "Returns the elements that come before the specified cursor.",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                },
+                "defaultValue": null
+              },
+              {
+                "name": "reverse",
+                "description": "Reverse the order of the underlying list.",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Boolean",
+                  "ofType": null
+                },
+                "defaultValue": "false"
+              }
+            ],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "MetafieldConnection",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "presentmentPrices",
+            "description": "List of prices and compare-at prices in the presentment currencies for this shop.",
+            "args": [
+              {
+                "name": "presentmentCurrencies",
+                "description": "The presentment currencies prices should return in.",
+                "type": {
+                  "kind": "LIST",
+                  "name": null,
+                  "ofType": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "ENUM",
+                      "name": "CurrencyCode",
+                      "ofType": null
+                    }
+                  }
+                },
+                "defaultValue": null
+              },
+              {
+                "name": "first",
+                "description": "Returns up to the first `n` elements from the list.",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Int",
+                  "ofType": null
+                },
+                "defaultValue": null
+              },
+              {
+                "name": "after",
+                "description": "Returns the elements that come after the specified cursor.",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                },
+                "defaultValue": null
+              },
+              {
+                "name": "last",
+                "description": "Returns up to the last `n` elements from the list.",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Int",
+                  "ofType": null
+                },
+                "defaultValue": null
+              },
+              {
+                "name": "before",
+                "description": "Returns the elements that come before the specified cursor.",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                },
+                "defaultValue": null
+              },
+              {
+                "name": "reverse",
+                "description": "Reverse the order of the underlying list.",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Boolean",
+                  "ofType": null
+                },
+                "defaultValue": "false"
+              }
+            ],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "ProductVariantPricePairConnection",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "price",
+            "description": "The product variant’s price.",
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Money",
+                "ofType": null
+              }
+            },
+            "isDeprecated": true,
+            "deprecationReason": "Use `priceV2` instead"
+          },
+          {
+            "name": "priceV2",
+            "description": "The product variant’s price.",
             "args": [],
             "type": {
               "kind": "NON_NULL",
@@ -3643,15 +4292,111 @@
             "deprecationReason": null
           },
           {
-            "name": "minVariantPrice",
-            "description": "The lowest variant's price.",
+            "name": "product",
+            "description": "The product object that the product variant belongs to.",
             "args": [],
             "type": {
               "kind": "NON_NULL",
               "name": null,
               "ofType": {
                 "kind": "OBJECT",
-                "name": "MoneyV2",
+                "name": "Product",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "requiresShipping",
+            "description": "Whether a customer needs to provide a shipping address when placing an order for the product variant.",
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Boolean",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "selectedOptions",
+            "description": "List of product options applied to the variant.",
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "OBJECT",
+                    "name": "SelectedOption",
+                    "ofType": null
+                  }
+                }
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "sku",
+            "description": "The SKU (stock keeping unit) associated with the variant.",
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "title",
+            "description": "The product variant’s title.",
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "weight",
+            "description": "The weight of the product variant in the unit system specified with `weight_unit`.",
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "Float",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "weightUnit",
+            "description": "Unit of measurement for weight.",
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "ENUM",
+                "name": "WeightUnit",
                 "ofType": null
               }
             },
@@ -3660,7 +4405,28 @@
           }
         ],
         "inputFields": null,
-        "interfaces": [],
+        "interfaces": [
+          {
+            "kind": "INTERFACE",
+            "name": "Node",
+            "ofType": null
+          },
+          {
+            "kind": "INTERFACE",
+            "name": "HasMetafields",
+            "ofType": null
+          }
+        ],
+        "enumValues": null,
+        "possibleTypes": null
+      },
+      {
+        "kind": "SCALAR",
+        "name": "Money",
+        "description": "A monetary value string. Example value: `\"100.57\"`.",
+        "fields": null,
+        "inputFields": null,
+        "interfaces": null,
         "enumValues": null,
         "possibleTypes": null
       },
@@ -3710,7 +4476,7 @@
       {
         "kind": "SCALAR",
         "name": "Decimal",
-        "description": "A signed decimal number, which supports arbitrary precision and is serialized as a string.",
+        "description": "A signed decimal number, which supports arbitrary precision and is serialized as a string. Example value: `\"29.99\"`.",
         "fields": null,
         "inputFields": null,
         "interfaces": null,
@@ -3836,12 +4602,18 @@
           {
             "name": "BYR",
             "description": "Belarusian Ruble (BYR).",
-            "isDeprecated": false,
-            "deprecationReason": null
+            "isDeprecated": true,
+            "deprecationReason": "`BYR` is deprecated. Use `BYN` available from version `2019-10` onwards instead."
           },
           {
             "name": "BZD",
             "description": "Belize Dollar (BZD).",
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "BMD",
+            "description": "Bermudian Dollar (BMD).",
             "isDeprecated": false,
             "deprecationReason": null
           },
@@ -4296,6 +5068,12 @@
             "deprecationReason": null
           },
           {
+            "name": "PAB",
+            "description": "Panamian Balboa (PAB).",
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "PKR",
             "description": "Pakistani Rupee (PKR).",
             "isDeprecated": false,
@@ -4569,278 +5347,13 @@
         "possibleTypes": null
       },
       {
-        "kind": "INPUT_OBJECT",
-        "name": "SelectedOptionInput",
-        "description": "Specifies the input fields required for a selected option.",
-        "fields": null,
-        "inputFields": [
-          {
-            "name": "name",
-            "description": "The product option’s name.",
-            "type": {
-              "kind": "NON_NULL",
-              "name": null,
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
-              }
-            },
-            "defaultValue": null
-          },
-          {
-            "name": "value",
-            "description": "The product option’s value.",
-            "type": {
-              "kind": "NON_NULL",
-              "name": null,
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
-              }
-            },
-            "defaultValue": null
-          }
-        ],
-        "interfaces": null,
-        "enumValues": null,
-        "possibleTypes": null
-      },
-      {
         "kind": "OBJECT",
-        "name": "ProductVariant",
-        "description": "A product variant represents a different version of a product, such as differing sizes or differing colors.",
+        "name": "MetafieldConnection",
+        "description": null,
         "fields": [
           {
-            "name": "available",
-            "description": "Indicates if the product variant is in stock.",
-            "args": [],
-            "type": {
-              "kind": "SCALAR",
-              "name": "Boolean",
-              "ofType": null
-            },
-            "isDeprecated": true,
-            "deprecationReason": "Use `availableForSale` instead"
-          },
-          {
-            "name": "availableForSale",
-            "description": "Indicates if the product variant is available for sale.",
-            "args": [],
-            "type": {
-              "kind": "NON_NULL",
-              "name": null,
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Boolean",
-                "ofType": null
-              }
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "compareAtPrice",
-            "description": "The compare at price of the variant. This can be used to mark a variant as on sale, when `compareAtPrice` is higher than `price`.",
-            "args": [],
-            "type": {
-              "kind": "SCALAR",
-              "name": "Money",
-              "ofType": null
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "id",
-            "description": "Globally unique identifier.",
-            "args": [],
-            "type": {
-              "kind": "NON_NULL",
-              "name": null,
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "ID",
-                "ofType": null
-              }
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "image",
-            "description": "Image associated with the product variant. This field falls back to the product image if no image is available.",
-            "args": [
-              {
-                "name": "maxWidth",
-                "description": "Image width in pixels between 1 and 2048. This argument is deprecated: Use `maxWidth` on `Image.transformedSrc` instead.",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Int",
-                  "ofType": null
-                },
-                "defaultValue": null
-              },
-              {
-                "name": "maxHeight",
-                "description": "Image height in pixels between 1 and 2048. This argument is deprecated: Use `maxHeight` on `Image.transformedSrc` instead.",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Int",
-                  "ofType": null
-                },
-                "defaultValue": null
-              },
-              {
-                "name": "crop",
-                "description": "Crops the image according to the specified region. This argument is deprecated: Use `crop` on `Image.transformedSrc` instead.",
-                "type": {
-                  "kind": "ENUM",
-                  "name": "CropRegion",
-                  "ofType": null
-                },
-                "defaultValue": null
-              },
-              {
-                "name": "scale",
-                "description": "Image size multiplier for high-resolution retina displays. Must be between 1 and 3. This argument is deprecated: Use `scale` on `Image.transformedSrc` instead.",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Int",
-                  "ofType": null
-                },
-                "defaultValue": "1"
-              }
-            ],
-            "type": {
-              "kind": "OBJECT",
-              "name": "Image",
-              "ofType": null
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "presentmentPrices",
-            "description": "List of prices and compare-at prices in the presentment currencies for this shop.",
-            "args": [
-              {
-                "name": "presentmentCurrencies",
-                "description": "The presentment currencies prices should return in.",
-                "type": {
-                  "kind": "LIST",
-                  "name": null,
-                  "ofType": {
-                    "kind": "NON_NULL",
-                    "name": null,
-                    "ofType": {
-                      "kind": "ENUM",
-                      "name": "CurrencyCode",
-                      "ofType": null
-                    }
-                  }
-                },
-                "defaultValue": null
-              },
-              {
-                "name": "first",
-                "description": "Returns up to the first `n` elements from the list.",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Int",
-                  "ofType": null
-                },
-                "defaultValue": null
-              },
-              {
-                "name": "after",
-                "description": "Returns the elements that come after the specified cursor.",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "String",
-                  "ofType": null
-                },
-                "defaultValue": null
-              },
-              {
-                "name": "last",
-                "description": "Returns up to the last `n` elements from the list.",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Int",
-                  "ofType": null
-                },
-                "defaultValue": null
-              },
-              {
-                "name": "before",
-                "description": "Returns the elements that come before the specified cursor.",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "String",
-                  "ofType": null
-                },
-                "defaultValue": null
-              },
-              {
-                "name": "reverse",
-                "description": "Reverse the order of the underlying list.",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Boolean",
-                  "ofType": null
-                },
-                "defaultValue": "false"
-              }
-            ],
-            "type": {
-              "kind": "NON_NULL",
-              "name": null,
-              "ofType": {
-                "kind": "OBJECT",
-                "name": "ProductVariantPricePairConnection",
-                "ofType": null
-              }
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "price",
-            "description": "The product variant’s price.",
-            "args": [],
-            "type": {
-              "kind": "NON_NULL",
-              "name": null,
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Money",
-                "ofType": null
-              }
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "product",
-            "description": "The product object that the product variant belongs to.",
-            "args": [],
-            "type": {
-              "kind": "NON_NULL",
-              "name": null,
-              "ofType": {
-                "kind": "OBJECT",
-                "name": "Product",
-                "ofType": null
-              }
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "selectedOptions",
-            "description": "List of product options applied to the variant.",
+            "name": "edges",
+            "description": "A list of edges.",
             "args": [],
             "type": {
               "kind": "NON_NULL",
@@ -4853,7 +5366,7 @@
                   "name": null,
                   "ofType": {
                     "kind": "OBJECT",
-                    "name": "SelectedOption",
+                    "name": "MetafieldEdge",
                     "ofType": null
                   }
                 }
@@ -4863,20 +5376,35 @@
             "deprecationReason": null
           },
           {
-            "name": "sku",
-            "description": "The SKU (stock keeping unit) associated with the variant.",
+            "name": "pageInfo",
+            "description": "Information to aid in pagination.",
             "args": [],
             "type": {
-              "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "PageInfo",
+                "ofType": null
+              }
             },
             "isDeprecated": false,
             "deprecationReason": null
-          },
+          }
+        ],
+        "inputFields": null,
+        "interfaces": [],
+        "enumValues": null,
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "MetafieldEdge",
+        "description": null,
+        "fields": [
           {
-            "name": "title",
-            "description": "The product variant’s title.",
+            "name": "cursor",
+            "description": "A cursor for use in pagination.",
             "args": [],
             "type": {
               "kind": "NON_NULL",
@@ -4891,27 +5419,15 @@
             "deprecationReason": null
           },
           {
-            "name": "weight",
-            "description": "The weight of the product variant in the unit system specified with `weight_unit`.",
-            "args": [],
-            "type": {
-              "kind": "SCALAR",
-              "name": "Float",
-              "ofType": null
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "weightUnit",
-            "description": "Unit of measurement for weight.",
+            "name": "node",
+            "description": "The item at the end of MetafieldEdge.",
             "args": [],
             "type": {
               "kind": "NON_NULL",
               "name": null,
               "ofType": {
-                "kind": "ENUM",
-                "name": "WeightUnit",
+                "kind": "OBJECT",
+                "name": "Metafield",
                 "ofType": null
               }
             },
@@ -4920,23 +5436,7 @@
           }
         ],
         "inputFields": null,
-        "interfaces": [
-          {
-            "kind": "INTERFACE",
-            "name": "Node",
-            "ofType": null
-          }
-        ],
-        "enumValues": null,
-        "possibleTypes": null
-      },
-      {
-        "kind": "SCALAR",
-        "name": "Money",
-        "description": "A monetary value string.",
-        "fields": null,
-        "inputFields": null,
-        "interfaces": null,
+        "interfaces": [],
         "enumValues": null,
         "possibleTypes": null
       },
@@ -5119,7 +5619,7 @@
       {
         "kind": "SCALAR",
         "name": "Float",
-        "description": "The `Float` scalar type represents signed double-precision fractional values as specified by [IEEE 754](https://en.wikipedia.org/wiki/IEEE_floating_point). ",
+        "description": "The `Float` scalar type represents signed double-precision fractional values as specified by [IEEE 754](https://en.wikipedia.org/wiki/IEEE_floating_point).",
         "fields": null,
         "inputFields": null,
         "interfaces": null,
@@ -5159,6 +5659,507 @@
             "deprecationReason": null
           }
         ],
+        "possibleTypes": null
+      },
+      {
+        "kind": "ENUM",
+        "name": "MetafieldValueType",
+        "description": "Metafield value types.",
+        "fields": null,
+        "inputFields": null,
+        "interfaces": null,
+        "enumValues": [
+          {
+            "name": "STRING",
+            "description": "A string metafield.",
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "INTEGER",
+            "description": "An integer metafield.",
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "JSON_STRING",
+            "description": "A json string metafield.",
+            "isDeprecated": false,
+            "deprecationReason": null
+          }
+        ],
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "CollectionConnection",
+        "description": null,
+        "fields": [
+          {
+            "name": "edges",
+            "description": "A list of edges.",
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "OBJECT",
+                    "name": "CollectionEdge",
+                    "ofType": null
+                  }
+                }
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "pageInfo",
+            "description": "Information to aid in pagination.",
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "PageInfo",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          }
+        ],
+        "inputFields": null,
+        "interfaces": [],
+        "enumValues": null,
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "CollectionEdge",
+        "description": null,
+        "fields": [
+          {
+            "name": "cursor",
+            "description": "A cursor for use in pagination.",
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "node",
+            "description": "The item at the end of CollectionEdge.",
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "Collection",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          }
+        ],
+        "inputFields": null,
+        "interfaces": [],
+        "enumValues": null,
+        "possibleTypes": null
+      },
+      {
+        "kind": "ENUM",
+        "name": "ProductImageSortKeys",
+        "description": "The set of valid sort keys for the images query.",
+        "fields": null,
+        "inputFields": null,
+        "interfaces": null,
+        "enumValues": [
+          {
+            "name": "CREATED_AT",
+            "description": "Sort by the `created_at` value.",
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "POSITION",
+            "description": "Sort by the `position` value.",
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "ID",
+            "description": "Sort by the `id` value.",
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "RELEVANCE",
+            "description": "During a search (i.e. when the `query` parameter has been specified on the connection) this sorts the\nresults by relevance to the search term(s). When no search query is specified, this sort key is not\ndeterministic and should not be used.\n",
+            "isDeprecated": false,
+            "deprecationReason": null
+          }
+        ],
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "ImageConnection",
+        "description": null,
+        "fields": [
+          {
+            "name": "edges",
+            "description": "A list of edges.",
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "OBJECT",
+                    "name": "ImageEdge",
+                    "ofType": null
+                  }
+                }
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "pageInfo",
+            "description": "Information to aid in pagination.",
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "PageInfo",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          }
+        ],
+        "inputFields": null,
+        "interfaces": [],
+        "enumValues": null,
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "ImageEdge",
+        "description": null,
+        "fields": [
+          {
+            "name": "cursor",
+            "description": "A cursor for use in pagination.",
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "node",
+            "description": "The item at the end of ImageEdge.",
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "Image",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          }
+        ],
+        "inputFields": null,
+        "interfaces": [],
+        "enumValues": null,
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "ProductOption",
+        "description": "Custom product property names like \"Size\", \"Color\", and \"Material\".\nProducts are based on permutations of these options.\nA product may have a maximum of 3 options.\n255 characters limit each.\n",
+        "fields": [
+          {
+            "name": "id",
+            "description": "Globally unique identifier.",
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "ID",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "name",
+            "description": "The product option’s name.",
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "values",
+            "description": "The corresponding value to the product option name.",
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "String",
+                    "ofType": null
+                  }
+                }
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          }
+        ],
+        "inputFields": null,
+        "interfaces": [
+          {
+            "kind": "INTERFACE",
+            "name": "Node",
+            "ofType": null
+          }
+        ],
+        "enumValues": null,
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "ProductPriceRangeConnection",
+        "description": null,
+        "fields": [
+          {
+            "name": "edges",
+            "description": "A list of edges.",
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "OBJECT",
+                    "name": "ProductPriceRangeEdge",
+                    "ofType": null
+                  }
+                }
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "pageInfo",
+            "description": "Information to aid in pagination.",
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "PageInfo",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          }
+        ],
+        "inputFields": null,
+        "interfaces": [],
+        "enumValues": null,
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "ProductPriceRangeEdge",
+        "description": null,
+        "fields": [
+          {
+            "name": "cursor",
+            "description": "A cursor for use in pagination.",
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "node",
+            "description": "The item at the end of ProductPriceRangeEdge.",
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "ProductPriceRange",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          }
+        ],
+        "inputFields": null,
+        "interfaces": [],
+        "enumValues": null,
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "ProductPriceRange",
+        "description": "The price range of the product.",
+        "fields": [
+          {
+            "name": "maxVariantPrice",
+            "description": "The highest variant's price.",
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "MoneyV2",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "minVariantPrice",
+            "description": "The lowest variant's price.",
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "MoneyV2",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          }
+        ],
+        "inputFields": null,
+        "interfaces": [],
+        "enumValues": null,
+        "possibleTypes": null
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "SelectedOptionInput",
+        "description": "Specifies the input fields required for a selected option.",
+        "fields": null,
+        "inputFields": [
+          {
+            "name": "name",
+            "description": "The product option’s name.",
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            "defaultValue": null
+          },
+          {
+            "name": "value",
+            "description": "The product option’s value.",
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            "defaultValue": null
+          }
+        ],
+        "interfaces": null,
+        "enumValues": null,
         "possibleTypes": null
       },
       {
@@ -7795,6 +8796,22 @@
             "deprecationReason": null
           },
           {
+            "name": "lineItemsSubtotalPrice",
+            "description": "The sum of all the prices of all the items in the checkout. Taxes, shipping and discounts excluded.",
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "MoneyV2",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "note",
             "description": null,
             "args": [],
@@ -7840,6 +8857,22 @@
               "ofType": {
                 "kind": "SCALAR",
                 "name": "Money",
+                "ofType": null
+              }
+            },
+            "isDeprecated": true,
+            "deprecationReason": "Use `paymentDueV2` instead"
+          },
+          {
+            "name": "paymentDueV2",
+            "description": "The amount left to be paid. This is equal to the cost of the line items, taxes and shipping minus discounts and gift cards.",
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "MoneyV2",
                 "ofType": null
               }
             },
@@ -7939,6 +8972,22 @@
                 "ofType": null
               }
             },
+            "isDeprecated": true,
+            "deprecationReason": "Use `subtotalPriceV2` instead"
+          },
+          {
+            "name": "subtotalPriceV2",
+            "description": "Price of the checkout before shipping and taxes.",
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "MoneyV2",
+                "ofType": null
+              }
+            },
             "isDeprecated": false,
             "deprecationReason": null
           },
@@ -7987,6 +9036,22 @@
                 "ofType": null
               }
             },
+            "isDeprecated": true,
+            "deprecationReason": "Use `totalPriceV2` instead"
+          },
+          {
+            "name": "totalPriceV2",
+            "description": "The sum of all the prices of all the items in the checkout, taxes and discounts included.",
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "MoneyV2",
+                "ofType": null
+              }
+            },
             "isDeprecated": false,
             "deprecationReason": null
           },
@@ -8000,6 +9065,22 @@
               "ofType": {
                 "kind": "SCALAR",
                 "name": "Money",
+                "ofType": null
+              }
+            },
+            "isDeprecated": true,
+            "deprecationReason": "Use `totalTaxV2` instead"
+          },
+          {
+            "name": "totalTaxV2",
+            "description": "The sum of all the taxes applied to the line items and shipping lines in the checkout.",
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "MoneyV2",
                 "ofType": null
               }
             },
@@ -8057,7 +9138,7 @@
         "fields": [
           {
             "name": "amountUsed",
-            "description": "The amount that was used taken from the Gift Card by applying it.",
+            "description": "The amount that was taken from the Gift Card by applying it.",
             "args": [],
             "type": {
               "kind": "NON_NULL",
@@ -8065,6 +9146,22 @@
               "ofType": {
                 "kind": "SCALAR",
                 "name": "Money",
+                "ofType": null
+              }
+            },
+            "isDeprecated": true,
+            "deprecationReason": "Use `amountUsedV2` instead"
+          },
+          {
+            "name": "amountUsedV2",
+            "description": "The amount that was taken from the Gift Card by applying it.",
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "MoneyV2",
                 "ofType": null
               }
             },
@@ -8081,6 +9178,22 @@
               "ofType": {
                 "kind": "SCALAR",
                 "name": "Money",
+                "ofType": null
+              }
+            },
+            "isDeprecated": true,
+            "deprecationReason": "Use `balanceV2` instead"
+          },
+          {
+            "name": "balanceV2",
+            "description": "The amount left on the Gift Card.",
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "MoneyV2",
                 "ofType": null
               }
             },
@@ -8113,6 +9226,22 @@
               "ofType": {
                 "kind": "SCALAR",
                 "name": "String",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "presentmentAmountUsed",
+            "description": "The amount that was applied to the checkout in its currency.",
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "MoneyV2",
                 "ofType": null
               }
             },
@@ -8209,6 +9338,22 @@
               "ofType": {
                 "kind": "SCALAR",
                 "name": "Money",
+                "ofType": null
+              }
+            },
+            "isDeprecated": true,
+            "deprecationReason": "Use `priceV2` instead"
+          },
+          {
+            "name": "priceV2",
+            "description": "Price of this shipping rate.",
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "MoneyV2",
                 "ofType": null
               }
             },
@@ -8550,7 +9695,7 @@
       {
         "kind": "UNION",
         "name": "PricingValue",
-        "description": "The value of the pricing object.",
+        "description": "The price value (fixed or percentage) for a discount application.",
         "fields": null,
         "inputFields": null,
         "interfaces": null,
@@ -9098,7 +10243,7 @@
           },
           {
             "name": "phone",
-            "description": "The customer's phone number.",
+            "description": "The customer's phone number for receiving SMS notifications.",
             "args": [],
             "type": {
               "kind": "SCALAR",
@@ -9185,6 +10330,18 @@
               "name": "Money",
               "ofType": null
             },
+            "isDeprecated": true,
+            "deprecationReason": "Use `subtotalPriceV2` instead"
+          },
+          {
+            "name": "subtotalPriceV2",
+            "description": "Price of the order before shipping and taxes.",
+            "args": [],
+            "type": {
+              "kind": "OBJECT",
+              "name": "MoneyV2",
+              "ofType": null
+            },
             "isDeprecated": false,
             "deprecationReason": null
           },
@@ -9232,6 +10389,22 @@
                 "ofType": null
               }
             },
+            "isDeprecated": true,
+            "deprecationReason": "Use `totalPriceV2` instead"
+          },
+          {
+            "name": "totalPriceV2",
+            "description": "The sum of all the prices of all the items in the order, taxes and discounts included (must be positive).",
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "MoneyV2",
+                "ofType": null
+              }
+            },
             "isDeprecated": false,
             "deprecationReason": null
           },
@@ -9245,6 +10418,22 @@
               "ofType": {
                 "kind": "SCALAR",
                 "name": "Money",
+                "ofType": null
+              }
+            },
+            "isDeprecated": true,
+            "deprecationReason": "Use `totalRefundedV2` instead"
+          },
+          {
+            "name": "totalRefundedV2",
+            "description": "The total amount that has been refunded.",
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "MoneyV2",
                 "ofType": null
               }
             },
@@ -9264,6 +10453,22 @@
                 "ofType": null
               }
             },
+            "isDeprecated": true,
+            "deprecationReason": "Use `totalShippingPriceV2` instead"
+          },
+          {
+            "name": "totalShippingPriceV2",
+            "description": "The total cost of shipping.",
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "MoneyV2",
+                "ofType": null
+              }
+            },
             "isDeprecated": false,
             "deprecationReason": null
           },
@@ -9274,6 +10479,18 @@
             "type": {
               "kind": "SCALAR",
               "name": "Money",
+              "ofType": null
+            },
+            "isDeprecated": true,
+            "deprecationReason": "Use `totalTaxV2` instead"
+          },
+          {
+            "name": "totalTaxV2",
+            "description": "The total cost of taxes.",
+            "args": [],
+            "type": {
+              "kind": "OBJECT",
+              "name": "MoneyV2",
               "ofType": null
             },
             "isDeprecated": false,
@@ -10349,6 +11566,65 @@
       },
       {
         "kind": "OBJECT",
+        "name": "ApiVersion",
+        "description": "A version of the API.",
+        "fields": [
+          {
+            "name": "displayName",
+            "description": "The human-readable name of the version.",
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "handle",
+            "description": "The unique identifier of an ApiVersion. All supported API versions have a date-based (YYYY-MM) or `unstable` handle.",
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "supported",
+            "description": "Whether the version is supported by Shopify.",
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Boolean",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          }
+        ],
+        "inputFields": null,
+        "interfaces": [],
+        "enumValues": null,
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
         "name": "Shop",
         "description": "Shop represents a collection of the general settings and information about the shop.",
         "fields": [
@@ -11049,7 +12325,7 @@
           },
           {
             "name": "currencyCode",
-            "description": "The three-letter code for the currency that the shop accepts.",
+            "description": "The three-letter code for the shop's primary currency.",
             "args": [],
             "type": {
               "kind": "NON_NULL",
@@ -11058,6 +12334,30 @@
                 "kind": "ENUM",
                 "name": "CurrencyCode",
                 "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "enabledPresentmentCurrencies",
+            "description": "A list of enabled currencies (ISO 4217 format) that the shop accepts. Merchants can enable currencies from their Shopify Payments settings in the Shopify admin.",
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "ENUM",
+                    "name": "CurrencyCode",
+                    "ofType": null
+                  }
+                }
               }
             },
             "isDeprecated": false,
@@ -11432,7 +12732,7 @@
           },
           {
             "name": "checkoutCompleteFree",
-            "description": null,
+            "description": "Completes a checkout without providing payment information. You can use this mutation for free items or items whose purchase price is covered by a gift card.",
             "args": [
               {
                 "name": "checkoutId",
@@ -11500,7 +12800,7 @@
           },
           {
             "name": "checkoutCompleteWithCreditCardV2",
-            "description": "Completes a checkout using a credit card token from Shopify's Vault.",
+            "description": "Completes a checkout using a credit card token from Shopify's card vault. Before you can complete checkouts using CheckoutCompleteWithCreditCardV2, you need to  [_request payment processing_](https://help.shopify.com/api/guides/sales-channel-sdk/getting-started#request-payment-processing).",
             "args": [
               {
                 "name": "checkoutId",
@@ -12445,7 +13745,7 @@
               },
               {
                 "name": "shippingRateHandle",
-                "description": "A concatenation of a Checkout’s shipping provider, price, and title, enabling the customer to select the availableShippingRates.",
+                "description": "A unique identifier to a Checkout’s shipping provider, price, and title combination, enabling the customer to select the availableShippingRates.",
                 "type": {
                   "kind": "NON_NULL",
                   "name": null,
@@ -13309,6 +14609,18 @@
             "deprecationReason": null
           },
           {
+            "name": "BAD_DOMAIN",
+            "description": "Input email contains an invalid domain name.",
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "INVALID_FOR_COUNTRY",
+            "description": "Input Zip is invalid for country provided.",
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "INVALID_FOR_COUNTRY_AND_PROVINCE",
             "description": "Input Zip is invalid for country and province provided.",
             "isDeprecated": false,
@@ -13375,6 +14687,12 @@
             "deprecationReason": null
           },
           {
+            "name": "GIFT_CARD_DEPLETED",
+            "description": "Gift card has no funds left.",
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "GIFT_CARD_NOT_FOUND",
             "description": "Gift card was not found.",
             "isDeprecated": false,
@@ -13431,6 +14749,12 @@
           {
             "name": "MISSING_PAYMENT_INPUT",
             "description": "Missing payment input.",
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "TOTAL_PRICE_MISMATCH",
+            "description": "The amount of the payment does not match the value to be paid.",
             "isDeprecated": false,
             "deprecationReason": null
           },
@@ -13980,6 +15304,22 @@
                 "ofType": null
               }
             },
+            "isDeprecated": true,
+            "deprecationReason": "Use `amountV2` instead"
+          },
+          {
+            "name": "amountV2",
+            "description": "The amount of the payment.",
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "MoneyV2",
+                "ofType": null
+              }
+            },
             "isDeprecated": false,
             "deprecationReason": null
           },
@@ -14244,6 +15584,22 @@
                 "ofType": null
               }
             },
+            "isDeprecated": true,
+            "deprecationReason": "Use `amountV2` instead"
+          },
+          {
+            "name": "amountV2",
+            "description": "The amount of money that the transaction was for.",
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "MoneyV2",
+                "ofType": null
+              }
+            },
             "isDeprecated": false,
             "deprecationReason": null
           },
@@ -14265,7 +15621,7 @@
           },
           {
             "name": "status",
-            "description": "The status of the transaction",
+            "description": "The status of the transaction.",
             "args": [],
             "type": {
               "kind": "NON_NULL",
@@ -14276,12 +15632,24 @@
                 "ofType": null
               }
             },
+            "isDeprecated": true,
+            "deprecationReason": "Use `statusV2` instead"
+          },
+          {
+            "name": "statusV2",
+            "description": "The status of the transaction.",
+            "args": [],
+            "type": {
+              "kind": "ENUM",
+              "name": "TransactionStatus",
+              "ofType": null
+            },
             "isDeprecated": false,
             "deprecationReason": null
           },
           {
             "name": "test",
-            "description": "Whether the transaction was done in test mode or not",
+            "description": "Whether the transaction was done in test mode or not.",
             "args": [],
             "type": {
               "kind": "NON_NULL",
@@ -15026,6 +16394,16 @@
             "type": {
               "kind": "SCALAR",
               "name": "Boolean",
+              "ofType": null
+            },
+            "defaultValue": null
+          },
+          {
+            "name": "presentmentCurrencyCode",
+            "description": "The three-letter currency code of one of the shop's enabled presentment currencies.\nIncluding this field creates a checkout in the specified currency. By default, new\ncheckouts are created in the shop's primary currency.\n",
+            "type": {
+              "kind": "ENUM",
+              "name": "CurrencyCode",
               "ofType": null
             },
             "defaultValue": null
@@ -19085,8 +20463,8 @@
                 "ofType": null
               }
             },
-            "isDeprecated": false,
-            "deprecationReason": null
+            "isDeprecated": true,
+            "deprecationReason": "Use `title` instead"
           },
           {
             "name": "targetSelection",
@@ -19114,6 +20492,22 @@
               "ofType": {
                 "kind": "ENUM",
                 "name": "DiscountApplicationTargetType",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "title",
+            "description": "The title of the application as defined by the Script.",
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "String",
                 "ofType": null
               }
             },
