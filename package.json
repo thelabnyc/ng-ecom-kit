@@ -7,9 +7,7 @@
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
-    "e2e": "ng e2e",
-    "gql-gen": "gql-gen",
-    "graphql-codegen": "graphql-codegen"
+    "e2e": "ng e2e"
   },
   "private": true,
   "dependencies": {
@@ -41,15 +39,10 @@
     "@angular/cli": "~8.1.1",
     "@angular/compiler-cli": "~8.1.1",
     "@angular/language-service": "~8.1.1",
-    "@graphql-codegen/cli": "^1.5.0",
-    "@graphql-codegen/typescript-apollo-angular": "^1.5.0",
     "@types/jasmine": "~3.3.8",
     "@types/jasminewd2": "~2.0.3",
     "@types/node": "~8.9.4",
     "codelyzer": "^5.0.0",
-    "graphql-code-generator": "^0.18.2",
-    "graphql-codegen-apollo-angular-template": "^0.18.2",
-    "graphql-codegen-typescript-common": "^0.18.2",
     "jasmine-core": "~3.4.0",
     "jasmine-marbles": "^0.6.0",
     "jasmine-spec-reporter": "~4.2.1",
