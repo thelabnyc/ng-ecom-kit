@@ -138,8 +138,6 @@ export interface CheckoutCreateInput {
   customAttributes?: Maybe<AttributeInput[]>;
   /** Allows setting partial addresses on a Checkout, skipping the full validation of attributes. The required attributes are city, province, and country. Full validation of addresses is still done at complete time. */
   allowPartialAddresses?: Maybe<boolean>;
-  /** The three-letter currency code of one of the shop's enabled presentment currencies. Including this field creates a checkout in the specified currency. By default, new checkouts are created in the shop's primary currency. */
-  presentmentCurrencyCode?: Maybe<CurrencyCode>;
 }
 /** Specifies the input fields to create a line item on a checkout. */
 export interface CheckoutLineItemInput {
@@ -253,6 +251,13 @@ export enum ProductCollectionSortKeys {
   CollectionDefault = 'COLLECTION_DEFAULT',
   Relevance = 'RELEVANCE'
 }
+/** The set of valid sort keys for the images query. */
+export enum ProductImageSortKeys {
+  CreatedAt = 'CREATED_AT',
+  Position = 'POSITION',
+  Id = 'ID',
+  Relevance = 'RELEVANCE'
+}
 /** Currency codes */
 export enum CurrencyCode {
   Usd = 'USD',
@@ -275,7 +280,6 @@ export enum CurrencyCode {
   Bif = 'BIF',
   Byr = 'BYR',
   Bzd = 'BZD',
-  Bmd = 'BMD',
   Btn = 'BTN',
   Bam = 'BAM',
   Brl = 'BRL',
@@ -351,7 +355,6 @@ export enum CurrencyCode {
   Ngn = 'NGN',
   Nok = 'NOK',
   Omr = 'OMR',
-  Pab = 'PAB',
   Pkr = 'PKR',
   Pgk = 'PGK',
   Pyg = 'PYG',
@@ -404,19 +407,6 @@ export enum WeightUnit {
   Grams = 'GRAMS',
   Pounds = 'POUNDS',
   Ounces = 'OUNCES'
-}
-/** Metafield value types. */
-export enum MetafieldValueType {
-  String = 'STRING',
-  Integer = 'INTEGER',
-  JsonString = 'JSON_STRING'
-}
-/** The set of valid sort keys for the images query. */
-export enum ProductImageSortKeys {
-  CreatedAt = 'CREATED_AT',
-  Position = 'POSITION',
-  Id = 'ID',
-  Relevance = 'RELEVANCE'
 }
 /** The set of valid sort keys for the variants query. */
 export enum ProductVariantSortKeys {
@@ -749,8 +739,6 @@ export enum CheckoutErrorCode {
   AlreadyCompleted = 'ALREADY_COMPLETED',
   Locked = 'LOCKED',
   NotSupported = 'NOT_SUPPORTED',
-  BadDomain = 'BAD_DOMAIN',
-  InvalidForCountry = 'INVALID_FOR_COUNTRY',
   InvalidForCountryAndProvince = 'INVALID_FOR_COUNTRY_AND_PROVINCE',
   InvalidStateInCountry = 'INVALID_STATE_IN_COUNTRY',
   InvalidProvinceInCountry = 'INVALID_PROVINCE_IN_COUNTRY',
@@ -762,7 +750,6 @@ export enum CheckoutErrorCode {
   GiftCardAlreadyApplied = 'GIFT_CARD_ALREADY_APPLIED',
   GiftCardCurrencyMismatch = 'GIFT_CARD_CURRENCY_MISMATCH',
   GiftCardExpired = 'GIFT_CARD_EXPIRED',
-  GiftCardDepleted = 'GIFT_CARD_DEPLETED',
   GiftCardNotFound = 'GIFT_CARD_NOT_FOUND',
   CartDoesNotMeetDiscountRequirementsNotice = 'CART_DOES_NOT_MEET_DISCOUNT_REQUIREMENTS_NOTICE',
   DiscountExpired = 'DISCOUNT_EXPIRED',
@@ -773,7 +760,6 @@ export enum CheckoutErrorCode {
   Empty = 'EMPTY',
   NotEnoughInStock = 'NOT_ENOUGH_IN_STOCK',
   MissingPaymentInput = 'MISSING_PAYMENT_INPUT',
-  TotalPriceMismatch = 'TOTAL_PRICE_MISMATCH',
   LineItemNotFound = 'LINE_ITEM_NOT_FOUND'
 }
 
@@ -808,20 +794,20 @@ export enum CustomerErrorCode {
   NotFound = 'NOT_FOUND'
 }
 
-/** An RFC 3986 and RFC 3987 compliant URI string. Example value: `"https://johns-apparel.myshopify.com"`. */
+/** An RFC 3986 and RFC 3987 compliant URI string. */
 export type Url = any;
 
-/** A string containing HTML code. Example value: `"<p>Grey cotton knit sweater.</p>"`. */
+/** A string containing HTML code. */
 export type Html = any;
 
-/** An ISO-8601 encoded UTC date time string. Example value: `"2019-07-03T20:47:55Z"`. */
+/** An ISO-8601 encoded UTC date time string. */
 export type DateTime = any;
 
-/** A monetary value string. Example value: `"100.57"`. */
-export type Money = any;
-
-/** A signed decimal number, which supports arbitrary precision and is serialized as a string. Example value: `"29.99"`. */
+/** A signed decimal number, which supports arbitrary precision and is serialized as a string. */
 export type Decimal = any;
+
+/** A monetary value string. */
+export type Money = any;
 
 // ====================================================
 // Documents
