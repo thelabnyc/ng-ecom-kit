@@ -10,6 +10,10 @@ export const addToCheckout = createAction(
 export const addToCheckoutFailure = createAction(
   '[EcomKit/shop-cart] Add To Checkout Failure'
 );
+export const addToCheckoutSuccess = createAction(
+  '[EcomKit/shop-cart] Add To Checkout Success',
+  props<{ checkout: CheckoutCreate.Checkout }>()
+);
 export const createCheckout = createAction(
   '[EcomKit/shop-cart] Create Checkout'
 );

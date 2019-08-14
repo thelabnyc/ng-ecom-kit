@@ -1,6 +1,10 @@
 import { createReducer, on, Action } from '@ngrx/store';
 import { CheckoutCreate } from './generated/graphql';
-import { setCheckout, clearCart } from './ng-shopify-cart.actions';
+import {
+  setCheckout,
+  addToCheckoutSuccess,
+  clearCart
+} from './ng-shopify-cart.actions';
 
 export interface ICartState {
   checkout: CheckoutCreate.Checkout | null;
@@ -12,7 +16,7 @@ const initialState: ICartState = {
 
 const cartReducer = createReducer(
   initialState,
-  on(setCheckout, (state, action) => ({
+  on(setCheckout, addToCheckoutSuccess, (state, action) => ({
     ...state,
     checkout: action.checkout
   })),
