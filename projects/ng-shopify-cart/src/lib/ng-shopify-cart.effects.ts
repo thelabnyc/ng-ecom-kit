@@ -143,7 +143,13 @@ export class CartEffects {
               checkoutId: checkout.id,
               discountCode: coupon
             })
-            .pipe(map(() => applyCouponSuccess()));
+            .pipe(
+              map(response =>
+                applyCouponSuccess({
+                  checkout: response.data.checkoutDiscountCodeApplyV2.checkout
+                })
+              )
+            );
         } else {
           const data: CheckoutCreate.Variables = {
             input: {
@@ -159,10 +165,12 @@ export class CartEffects {
                     discountCode: coupon
                   })
                   .pipe(
-                    mergeMap(() => [
-                      applyCouponSuccess(),
-                      setCheckout({ checkout: createdCheckout })
-                    ])
+                    map(response =>
+                      applyCouponSuccess({
+                        checkout:
+                          response.data.checkoutDiscountCodeApplyV2.checkout
+                      })
+                    )
                   );
               } else {
                 return EMPTY;
@@ -184,7 +192,13 @@ export class CartEffects {
             .mutate({
               checkoutId: checkout.id
             })
-            .pipe(map(() => removeCouponSuccess()));
+            .pipe(
+              map(response =>
+                removeCouponSuccess({
+                  checkout: response.data.checkoutDiscountCodeApplyV2.checkout
+                })
+              )
+            );
         }
         return EMPTY;
       })

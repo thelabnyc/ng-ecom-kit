@@ -1681,7 +1681,38 @@ export class CheckoutDiscountCodeApplyV2GQL extends Apollo.Mutation<
                     message
                 }
                 checkout {
-                    id
+                  id
+                  webUrl
+                  subtotalPrice
+                  order {
+                      id
+                      orderNumber
+                  }
+                  lineItems(first: 100) {
+                      edges {
+                          node {
+                              id
+                              title
+                              quantity
+                              variant {
+                                  id
+                                  product {
+                                      handle
+                                  }
+                                  image {
+                                      id
+                                      altText
+                                      originalSrc
+                                      transformedSrc
+                                  }
+                                  title
+                                  price
+                                  compareAtPrice
+                                  availableForSale
+                              }
+                          }
+                      }
+                  }
                 }
             }
         }
@@ -1702,7 +1733,38 @@ export class CheckoutDiscountCodeRemoveGQL extends Apollo.Mutation<
                     message
                 }
                 checkout {
-                    id
+                  id
+                  webUrl
+                  subtotalPrice
+                  order {
+                      id
+                      orderNumber
+                  }
+                  lineItems(first: 100) {
+                      edges {
+                          node {
+                              id
+                              title
+                              quantity
+                              variant {
+                                  id
+                                  product {
+                                      handle
+                                  }
+                                  image {
+                                      id
+                                      altText
+                                      originalSrc
+                                      transformedSrc
+                                  }
+                                  title
+                                  price
+                                  compareAtPrice
+                                  availableForSale
+                              }
+                          }
+                      }
+                  }
                 }
             }
         }

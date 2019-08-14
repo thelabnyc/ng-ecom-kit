@@ -3,6 +3,8 @@ import { CheckoutCreate } from './generated/graphql';
 import {
   setCheckout,
   addToCheckoutSuccess,
+  applyCouponSuccess,
+  removeCouponSuccess,
   clearCart
 } from './ng-shopify-cart.actions';
 
@@ -16,10 +18,16 @@ const initialState: ICartState = {
 
 const cartReducer = createReducer(
   initialState,
-  on(setCheckout, addToCheckoutSuccess, (state, action) => ({
-    ...state,
-    checkout: action.checkout
-  })),
+  on(
+    setCheckout,
+    addToCheckoutSuccess,
+    applyCouponSuccess,
+    removeCouponSuccess,
+    (state, action) => ({
+      ...state,
+      checkout: action.checkout
+    })
+  ),
   on(clearCart, state => ({
     ...state,
     checkout: null
