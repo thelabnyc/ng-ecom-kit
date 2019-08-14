@@ -29,11 +29,13 @@ export const applyCoupon = createAction(
   props<{ code: string }>()
 );
 export const applyCouponSuccess = createAction(
-  '[EcomKit/shop-cart] Apply Coupon Success'
+  '[EcomKit/shop-cart] Apply Coupon Success',
+  props<{ checkout: CheckoutCreate.Checkout }>()
 );
 export const removeCoupon = createAction('[EcomKit/shop-cart] Remove Coupon');
 export const removeCouponSuccess = createAction(
-  '[EcomKit/shop-cart] Remove Coupon Success'
+  '[EcomKit/shop-cart] Remove Coupon Success',
+  props<{ checkout: CheckoutCreate.Checkout }>()
 );
 export const removeLineItem = createAction(
   '[EcomKit/shop-cart] Remove Line Item from Cart',
