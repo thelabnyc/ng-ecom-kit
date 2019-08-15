@@ -1,9 +1,8 @@
-import { SortBy } from './interfaces';
 import { createReducer, on } from '@ngrx/store';
 import * as GridActions from './actions';
 
 export interface IGridState {
-  sortBy: SortBy | null;
+  sortBy: string | null;
   selectedFilters: { id: number; isVariant: boolean }[];
 }
 
