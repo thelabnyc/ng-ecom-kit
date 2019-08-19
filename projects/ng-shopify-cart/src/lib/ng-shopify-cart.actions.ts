@@ -1,5 +1,5 @@
 import { createAction, props } from '@ngrx/store';
-import { CheckoutCreate } from './generated/graphql';
+import { CheckoutStateFragment } from './generated/graphql';
 import { IVariantIdQuantity, IVariantShopifyIdQuantity } from './interfaces';
 
 export const refreshCart = createAction('[EcomKit/shop-cart] Refresh Cart');
@@ -12,14 +12,14 @@ export const addToCheckoutFailure = createAction(
 );
 export const addToCheckoutSuccess = createAction(
   '[EcomKit/shop-cart] Add To Checkout Success',
-  props<{ checkout: CheckoutCreate.Checkout }>()
+  props<{ checkout: CheckoutStateFragment }>()
 );
 export const createCheckout = createAction(
   '[EcomKit/shop-cart] Create Checkout'
 );
 export const setCheckout = createAction(
   '[EcomKit/shop-cart] Set Checkout',
-  props<{ checkout: CheckoutCreate.Checkout }>()
+  props<{ checkout: CheckoutStateFragment }>()
 );
 export const createCheckoutFailure = createAction(
   '[EcomKit/shop-cart] Create Checkout Failure'
@@ -30,12 +30,12 @@ export const applyCoupon = createAction(
 );
 export const applyCouponSuccess = createAction(
   '[EcomKit/shop-cart] Apply Coupon Success',
-  props<{ checkout: CheckoutCreate.Checkout }>()
+  props<{ checkout: CheckoutStateFragment }>()
 );
 export const removeCoupon = createAction('[EcomKit/shop-cart] Remove Coupon');
 export const removeCouponSuccess = createAction(
   '[EcomKit/shop-cart] Remove Coupon Success',
-  props<{ checkout: CheckoutCreate.Checkout }>()
+  props<{ checkout: CheckoutStateFragment }>()
 );
 export const removeLineItem = createAction(
   '[EcomKit/shop-cart] Remove Line Item from Cart',

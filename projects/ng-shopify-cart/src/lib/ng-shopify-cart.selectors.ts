@@ -1,5 +1,6 @@
 import { createFeatureSelector, createSelector } from '@ngrx/store';
 import { IAppState, ICartState } from './ng-shopify-cart.reducer';
+import { IDiscount } from './interfaces';
 
 export const selectFeature = createFeatureSelector<IAppState, ICartState>(
   'cart'
@@ -36,6 +37,38 @@ export const selectCheckoutSubtotal = createSelector(
     }
   }
 );
+
+function diffPrices(total: string, subtotal: string): string {
+  const totalFloat = parseFloat(total);
+  const subtotalFloat = parseFloat(subtotal);
+  const resultFloat = totalFloat - subtotalFloat;
+  const resultRounded = Math.round(resultFloat * 100) / 100;
+  return resultRounded.toString(10);
+}
+
+export const selectCheckoutDiscount = createSelector(
+  selectCheckout,
+  (checkout): IDiscount | null => {
+    if (!checkout || !checkout.discountApplications) {
+      return null;
+    }
+    const amount = diffPrices(checkout.totalPrice, checkout.subtotalPrice);
+
+    let name: string;
+    let canRemove: boolean;
+    const node = checkout.discountApplications.edges[0].node;
+    if (node.__typename === 'DiscountCodeApplication') {
+      name = node.code;
+      canRemove = true;
+    } else {
+      name = node.title;
+      canRemove = false;
+    }
+
+    return { amount, name, canRemove };
+  }
+);
+
 export const selectCheckoutItemCount = createSelector(
   selectCheckout,
   checkout => {

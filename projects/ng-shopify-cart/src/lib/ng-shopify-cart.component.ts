@@ -5,7 +5,7 @@ import {
   Output,
   EventEmitter
 } from '@angular/core';
-import { CheckoutCreate } from './generated/graphql';
+import { CheckoutLineItem } from './generated/graphql';
 import { IVariantIdQuantity } from './interfaces';
 
 @Component({
@@ -15,7 +15,7 @@ import { IVariantIdQuantity } from './interfaces';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NgShopifyCartComponent {
-  @Input() lineItems: CheckoutCreate.Node;
+  @Input() lineItems: CheckoutLineItem;
   @Input() subtotal: string;
   @Input() checkoutUrl: string;
   @Input() itemCount: number;
