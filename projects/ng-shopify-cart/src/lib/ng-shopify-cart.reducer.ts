@@ -1,5 +1,5 @@
 import { createReducer, on, Action } from '@ngrx/store';
-import { CheckoutCreate } from './generated/graphql';
+import { CheckoutStateFragment } from './generated/graphql';
 import {
   setCheckout,
   addToCheckoutSuccess,
@@ -9,7 +9,7 @@ import {
 } from './ng-shopify-cart.actions';
 
 export interface ICartState {
-  checkout: CheckoutCreate.Checkout | null;
+  checkout: CheckoutStateFragment | null;
 }
 
 const initialState: ICartState = {

@@ -1,0 +1,165 @@
+mutation customerAccessTokenCreate($input: CustomerAccessTokenCreateInput!) {
+  customerAccessTokenCreate(input: $input) {
+    userErrors {
+      field
+      message
+    }
+    customerAccessToken {
+      accessToken
+      expiresAt
+    }
+    customerUserErrors {
+      field
+      message
+    }
+  }
+}
+
+fragment checkoutState on Checkout {
+  id
+  webUrl
+  subtotalPrice
+  totalPrice
+  order {
+    id
+    orderNumber
+  }
+  discountApplications(first:100) {
+    edges {
+      node {
+        ... on AutomaticDiscountApplication {
+          title
+        }
+        ... on ManualDiscountApplication {
+          title
+        }
+        ... on ScriptDiscountApplication {
+          title
+        }
+        ... on DiscountCodeApplication {
+          code
+        }
+      }
+    }
+  }
+  lineItems(first: 100) {
+    edges {
+      node {
+        id
+        title
+        quantity
+        variant {
+          id
+          product{
+            handle
+          }
+          image {
+            id
+            altText
+            originalSrc
+            transformedSrc
+          }
+          title
+          price
+          compareAtPrice
+          availableForSale
+        }
+      }
+    }
+  }
+}
+
+mutation checkoutCreate($input: CheckoutCreateInput!) {
+  checkoutCreate(input: $input) {
+    userErrors {
+      field
+      message
+    }
+    checkout {
+      ...checkoutState
+    }
+    checkoutUserErrors {
+      field
+      message
+    }
+  }
+}
+
+mutation checkoutLineItemsAdd(
+  $lineItems: [CheckoutLineItemInput!]!
+  $checkoutId: ID!
+) {
+  checkoutLineItemsAdd(lineItems: $lineItems, checkoutId: $checkoutId) {
+    checkout {
+      ...checkoutState
+    }
+  }
+}
+
+mutation checkoutLineItemsReplace(
+  $lineItems: [CheckoutLineItemInput!]!
+  $checkoutId: ID!
+) {
+  checkoutLineItemsReplace(lineItems: $lineItems, checkoutId: $checkoutId) {
+    checkout {
+      ...checkoutState
+    }
+  }
+}
+
+query getCheckout($input: ID!) {
+  node(id: $input) {
+    id
+    ... on Checkout {
+      ...checkoutState
+    }
+  }
+}
+
+mutation checkoutCustomerAssociateV2(
+  $checkoutId: ID!
+  $customerAccessToken: String!
+) {
+  checkoutCustomerAssociateV2(
+    checkoutId: $checkoutId
+    customerAccessToken: $customerAccessToken
+  ) {
+    userErrors {
+      field
+      message
+    }
+    checkout {
+      id
+    }
+    customer {
+      id
+    }
+  }
+}
+
+mutation checkoutDiscountCodeApplyV2($discountCode: String!, $checkoutId: ID!) {
+  checkoutDiscountCodeApplyV2(
+    discountCode: $discountCode
+    checkoutId: $checkoutId
+  ) {
+    userErrors {
+      field
+      message
+    }
+    checkout {
+      ...checkoutState
+    }
+  }
+}
+
+mutation checkoutDiscountCodeRemove($checkoutId: ID!) {
+  checkoutDiscountCodeRemove(checkoutId: $checkoutId) {
+    userErrors {
+      field
+      message
+    }
+    checkout {
+      ...checkoutState
+    }
+  }
+}

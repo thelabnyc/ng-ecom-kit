@@ -11,12 +11,15 @@ import { Store, select } from '@ngrx/store';
 import { EMPTY, of } from 'rxjs';
 import {
   CheckoutCreateGQL,
-  CheckoutCreate,
+  CheckoutCreateMutation,
+  CheckoutCreateMutationVariables,
   CheckoutLineItemsAddGQL,
-  CheckoutLineItemsAdd,
+  CheckoutLineItemsAddMutation,
+  CheckoutLineItemsAddMutationVariables,
   CheckoutCustomerAssociateV2GQL,
   CheckoutDiscountCodeApplyV2GQL,
-  CheckoutLineItemsReplace,
+  CheckoutLineItemsReplaceMutation,
+  CheckoutLineItemsReplaceMutationVariables,
   CheckoutLineItemsReplaceGQL,
   GetCheckoutGQL,
   CheckoutDiscountCodeRemoveGQL
@@ -64,13 +67,13 @@ export class CartEffects {
           { variantId: variantGID, quantity: action.quantity }
         ];
         if (checkout) {
-          const data: CheckoutLineItemsAdd.Variables = {
+          const data: CheckoutLineItemsAddMutationVariables = {
             checkoutId: checkout.id,
             lineItems
           };
           return this.checkoutLineItemsAdd.mutate(data).pipe(
             map(res => {
-              const mutation: CheckoutLineItemsAdd.Mutation = res.data;
+              const mutation: CheckoutLineItemsAddMutation = res.data;
               if (
                 mutation.checkoutLineItemsAdd &&
                 mutation.checkoutLineItemsAdd.checkout
@@ -86,7 +89,9 @@ export class CartEffects {
             })
           );
         } else {
-          const data: CheckoutCreate.Variables = { input: { lineItems } };
+          const data: CheckoutCreateMutationVariables = {
+            input: { lineItems }
+          };
           return this.createCheckout(data, this.userAccessToken).pipe(
             map(createdCheckout => {
               if (createdCheckout) {
@@ -151,7 +156,7 @@ export class CartEffects {
               )
             );
         } else {
-          const data: CheckoutCreate.Variables = {
+          const data: CheckoutCreateMutationVariables = {
             input: {
               lineItems: []
             }
@@ -214,7 +219,7 @@ export class CartEffects {
       ),
       mergeMap(([action, checkout]) => {
         if (checkout) {
-          const data: CheckoutLineItemsReplace.Variables = {
+          const data: CheckoutLineItemsReplaceMutationVariables = {
             checkoutId: checkout.id,
             lineItems: checkout.lineItems.edges
               .map(lineItem => {
@@ -229,7 +234,7 @@ export class CartEffects {
           };
           return this.checkoutLineItemsReplace.mutate(data).pipe(
             map(res => {
-              const mutation: CheckoutLineItemsReplace.Mutation = res.data;
+              const mutation: CheckoutLineItemsReplaceMutation = res.data;
               if (
                 mutation.checkoutLineItemsReplace &&
                 mutation.checkoutLineItemsReplace.checkout
@@ -260,7 +265,7 @@ export class CartEffects {
       ),
       mergeMap(([action, checkout]) => {
         if (checkout) {
-          const data: CheckoutLineItemsReplace.Variables = {
+          const data: CheckoutLineItemsReplaceMutationVariables = {
             checkoutId: checkout.id,
             lineItems: checkout.lineItems.edges.map(lineItem => {
               if (
@@ -285,7 +290,7 @@ export class CartEffects {
           };
           return this.checkoutLineItemsReplace.mutate(data).pipe(
             map(res => {
-              const mutation: CheckoutLineItemsReplace.Mutation = res.data;
+              const mutation: CheckoutLineItemsReplaceMutation = res.data;
               if (
                 mutation.checkoutLineItemsReplace &&
                 mutation.checkoutLineItemsReplace.checkout
@@ -316,7 +321,7 @@ export class CartEffects {
       ),
       mergeMap(([action, checkout]) => {
         if (checkout) {
-          const data: CheckoutLineItemsReplace.Variables = {
+          const data: CheckoutLineItemsReplaceMutationVariables = {
             checkoutId: checkout.id,
             lineItems: checkout.lineItems.edges.map(lineItem => {
               if (
@@ -341,7 +346,7 @@ export class CartEffects {
           };
           return this.checkoutLineItemsReplace.mutate(data).pipe(
             map(res => {
-              const mutation: CheckoutLineItemsReplace.Mutation = res.data;
+              const mutation: CheckoutLineItemsReplaceMutation = res.data;
               if (
                 mutation.checkoutLineItemsReplace &&
                 mutation.checkoutLineItemsReplace.checkout
@@ -371,7 +376,7 @@ export class CartEffects {
         if (checkout) {
           return EMPTY; // It's already been created
         }
-        const data: CheckoutCreate.Variables = {
+        const data: CheckoutCreateMutationVariables = {
           input: {
             lineItems: []
           }
@@ -391,12 +396,12 @@ export class CartEffects {
 
   /** Create new checkout object and associate user if possible */
   private createCheckout(
-    data: CheckoutCreate.Variables,
+    data: CheckoutCreateMutationVariables,
     userAccessToken: string | null
   ) {
     return this.checkoutCreate.mutate(data).pipe(
       map(res => {
-        const mutation: CheckoutCreate.Mutation = res.data;
+        const mutation: CheckoutCreateMutation = res.data;
         if (mutation.checkoutCreate && mutation.checkoutCreate.checkout) {
           if (userAccessToken) {
             const checkoutId = mutation.checkoutCreate.checkout.id;
