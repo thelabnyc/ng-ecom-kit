@@ -9,7 +9,9 @@ import {
   selectCheckoutLineItems,
   selectCheckoutSubtotal,
   selectCheckoutUrl,
-  selectCheckoutItemCount
+  selectCheckoutItemCount,
+  selectCheckoutDiscount,
+  selectDiscountError
 } from './ng-shopify-cart.selectors';
 import { IVariantShopifyIdQuantity } from './interfaces';
 
@@ -33,6 +35,8 @@ export class NgShopifyCartContainer {
   checkoutSubtotal$ = this.store.pipe(select(selectCheckoutSubtotal));
   checkoutUrl$ = this.store.pipe(select(selectCheckoutUrl));
   checkoutItemCount$ = this.store.pipe(select(selectCheckoutItemCount));
+  checkoutDiscount$ = this.store.pipe(select(selectCheckoutDiscount));
+  discountError$ = this.store.pipe(select(selectDiscountError));
 
   constructor(private store: Store<any>) {}
 

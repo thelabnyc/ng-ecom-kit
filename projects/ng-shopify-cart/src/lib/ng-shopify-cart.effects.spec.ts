@@ -44,7 +44,11 @@ describe('AppEffects', () => {
       imports: [
         StoreModule.forRoot(
           { cart: reducer },
-          { initialState: { cart: { checkout: { id: 'test' } } } }
+          {
+            initialState: {
+              cart: { checkout: { id: 'test' }, couponError: null }
+            }
+          }
         ),
         ApolloTestingModule
       ],

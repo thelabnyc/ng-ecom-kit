@@ -1,6 +1,9 @@
 schema: projects/ng-shopify-cart/src/download.json
+overwrite: true
 documents: projects/ng-shopify-cart/src/home.graphql
 generates:
+  projects/ng-shopify-cart/src/lib/generated/introspection-result.ts:
+    - fragment-matcher
   projects/ng-shopify-cart/src/lib/generated/graphql.ts:
     - typescript
     - typescript-operations

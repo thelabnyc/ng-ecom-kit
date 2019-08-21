@@ -5,15 +5,20 @@ import {
   addToCheckoutSuccess,
   applyCouponSuccess,
   removeCouponSuccess,
-  clearCart
+  clearCart,
+  applyCouponFailure
 } from './ng-shopify-cart.actions';
 
 export interface ICartState {
   checkout: CheckoutStateFragment | null;
+  couponError: {
+    code: string;
+  } | null;
 }
 
 const initialState: ICartState = {
-  checkout: null
+  checkout: null,
+  couponError: null
 };
 
 const cartReducer = createReducer(
@@ -21,7 +26,6 @@ const cartReducer = createReducer(
   on(
     setCheckout,
     addToCheckoutSuccess,
-    applyCouponSuccess,
     removeCouponSuccess,
     (state, action) => ({
       ...state,
@@ -31,6 +35,18 @@ const cartReducer = createReducer(
   on(clearCart, state => ({
     ...state,
     checkout: null
+  })),
+  on(applyCouponSuccess, (state, action) => ({
+    ...state,
+    checkout: action.checkout,
+    couponError: null
+  })),
+  on(applyCouponFailure, (state, action) => ({
+    ...state,
+    checkout: action.checkout,
+    couponError: {
+      code: action.code
+    }
   }))
 );
 
