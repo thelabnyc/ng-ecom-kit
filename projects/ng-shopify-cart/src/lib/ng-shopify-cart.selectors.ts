@@ -49,7 +49,12 @@ function diffPrices(total: string, subtotal: string): string {
 export const selectCheckoutDiscount = createSelector(
   selectCheckout,
   (checkout): IDiscount | null => {
-    if (!checkout || !checkout.discountApplications) {
+    if (
+      !checkout ||
+      !checkout.discountApplications ||
+      !checkout.discountApplications.edges ||
+      !checkout.discountApplications.edges[0]
+    ) {
       return null;
     }
     const amount = diffPrices(checkout.totalPrice, checkout.subtotalPrice);
@@ -67,6 +72,11 @@ export const selectCheckoutDiscount = createSelector(
 
     return { amount, name, canRemove };
   }
+);
+
+export const selectDiscountError = createSelector(
+  selectFeature,
+  state => (state.couponError ? state.couponError.code : null)
 );
 
 export const selectCheckoutItemCount = createSelector(

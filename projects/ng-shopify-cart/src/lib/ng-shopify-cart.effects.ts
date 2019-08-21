@@ -22,7 +22,9 @@ import {
   CheckoutLineItemsReplaceMutationVariables,
   CheckoutLineItemsReplaceGQL,
   GetCheckoutGQL,
-  CheckoutDiscountCodeRemoveGQL
+  CheckoutDiscountCodeRemoveGQL,
+  CheckoutDiscountCodeRemoveMutation,
+  CheckoutDiscountCodeApplyV2Mutation
 } from './generated/graphql';
 import {
   addToCheckout,
@@ -41,7 +43,8 @@ import {
   createCheckout,
   createCheckoutFailure,
   removeCoupon,
-  removeCouponSuccess
+  removeCouponSuccess,
+  applyCouponFailure
 } from './ng-shopify-cart.actions';
 import { IAppState } from './ng-shopify-cart.reducer';
 import { INgShopifyCartConfig } from './interfaces';
@@ -143,18 +146,7 @@ export class CartEffects {
       exhaustMap(([action, checkout]) => {
         const coupon = action.code;
         if (checkout) {
-          return this.checkoutDiscountCodeApplyV2
-            .mutate({
-              checkoutId: checkout.id,
-              discountCode: coupon
-            })
-            .pipe(
-              map(response =>
-                applyCouponSuccess({
-                  checkout: response.data.checkoutDiscountCodeApplyV2.checkout
-                })
-              )
-            );
+          return this.applyPromoCode(checkout.id, coupon);
         } else {
           const data: CheckoutCreateMutationVariables = {
             input: {
@@ -164,19 +156,7 @@ export class CartEffects {
           return this.createCheckout(data, this.userAccessToken).pipe(
             mergeMap(createdCheckout => {
               if (createdCheckout) {
-                return this.checkoutDiscountCodeApplyV2
-                  .mutate({
-                    checkoutId: createdCheckout.id,
-                    discountCode: coupon
-                  })
-                  .pipe(
-                    map(response =>
-                      applyCouponSuccess({
-                        checkout:
-                          response.data.checkoutDiscountCodeApplyV2.checkout
-                      })
-                    )
-                  );
+                return this.applyPromoCode(createdCheckout.id, coupon);
               } else {
                 return EMPTY;
               }
@@ -198,11 +178,13 @@ export class CartEffects {
               checkoutId: checkout.id
             })
             .pipe(
-              map(response =>
-                removeCouponSuccess({
-                  checkout: response.data.checkoutDiscountCodeApplyV2.checkout
-                })
-              )
+              map(response => {
+                const mutation: CheckoutDiscountCodeRemoveMutation =
+                  response.data;
+                return removeCouponSuccess({
+                  checkout: mutation.checkoutDiscountCodeRemove.checkout
+                });
+              })
             );
         }
         return EMPTY;
@@ -416,6 +398,31 @@ export class CartEffects {
         }
       })
     );
+  }
+
+  private applyPromoCode(checkoutId: string, discountCode: string) {
+    return this.checkoutDiscountCodeApplyV2
+      .mutate({ checkoutId, discountCode })
+      .pipe(
+        map(response => {
+          const mutation: CheckoutDiscountCodeApplyV2Mutation = response.data;
+
+          if (
+            mutation.checkoutDiscountCodeApplyV2.userErrors &&
+            mutation.checkoutDiscountCodeApplyV2.userErrors.find(
+              error => error.field.indexOf('discountCode') > -1
+            )
+          ) {
+            return applyCouponFailure({
+              checkout: mutation.checkoutDiscountCodeApplyV2.checkout,
+              code: discountCode
+            });
+          }
+          return applyCouponSuccess({
+            checkout: mutation.checkoutDiscountCodeApplyV2.checkout
+          });
+        })
+      );
   }
 
   constructor(

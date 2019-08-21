@@ -32,6 +32,10 @@ export const applyCouponSuccess = createAction(
   '[EcomKit/shop-cart] Apply Coupon Success',
   props<{ checkout: CheckoutStateFragment }>()
 );
+export const applyCouponFailure = createAction(
+  '[EcomKit/shop-cart] Apply Coupon Failure',
+  props<{ checkout: CheckoutStateFragment; code: string }>()
+);
 export const removeCoupon = createAction('[EcomKit/shop-cart] Remove Coupon');
 export const removeCouponSuccess = createAction(
   '[EcomKit/shop-cart] Remove Coupon Success',
