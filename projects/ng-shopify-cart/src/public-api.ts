@@ -10,3 +10,4 @@ export * from './lib/ng-shopify-cart.component';
 export {
   default as introspectionQueryResultData
 } from './lib/generated/introspection-result';
+export * from './lib/interfaces';
