@@ -6,7 +6,10 @@ import {
   applyCouponSuccess,
   removeCouponSuccess,
   clearCart,
-  applyCouponFailure
+  applyCouponFailure,
+  removeLineItemSuccess,
+  incrementLineItemQuantitySuccess,
+  decrementLineItemQuantitySuccess
 } from './ng-shopify-cart.actions';
 
 export interface ICartState {
@@ -27,6 +30,9 @@ const cartReducer = createReducer(
     setCheckout,
     addToCheckoutSuccess,
     removeCouponSuccess,
+    removeLineItemSuccess,
+    incrementLineItemQuantitySuccess,
+    decrementLineItemQuantitySuccess,
     (state, action) => ({
       ...state,
       checkout: action.checkout

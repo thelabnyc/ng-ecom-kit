@@ -45,6 +45,10 @@ export const removeLineItem = createAction(
   '[EcomKit/shop-cart] Remove Line Item from Cart',
   props<IVariantShopifyIdQuantity>()
 );
+export const removeLineItemSuccess = createAction(
+  '[EcomKit/shop-cart] Remove Line Item from Cart Success',
+  props<{ checkout: CheckoutStateFragment }>()
+);
 export const removeLineItemFailure = createAction(
   '[EcomKit/shop-cart] Remove Line Item from Cart Failure'
 );
@@ -53,12 +57,20 @@ export const incrementLineItemQuantity = createAction(
   '[EcomKit/shop-cart] Increment Line Item Quantity on Cart',
   props<IVariantShopifyIdQuantity>()
 );
+export const incrementLineItemQuantitySuccess = createAction(
+  '[EcomKit/shop-cart] Increment Line Item Quantity on Cart Success',
+  props<{ checkout: CheckoutStateFragment }>()
+);
 export const incrementLineItemQuantityFailure = createAction(
   '[EcomKit/shop-cart] Increment Line Item Quantity on Cart Failure'
 );
 export const decrementLineItemQuantity = createAction(
   '[EcomKit/shop-cart] Decrement Line Item Quantity on Cart',
   props<IVariantShopifyIdQuantity>()
+);
+export const decrementLineItemQuantitySuccess = createAction(
+  '[EcomKit/shop-cart] Decrement Line Item Quantity on Cart Success',
+  props<{ checkout: CheckoutStateFragment }>()
 );
 export const decrementLineItemQuantityFailure = createAction(
   '[EcomKit/shop-cart] Decrement Line Item Quantity on Cart Failure'
