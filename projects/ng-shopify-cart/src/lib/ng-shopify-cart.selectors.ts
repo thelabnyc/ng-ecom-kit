@@ -31,20 +31,14 @@ export const selectCheckoutLineItems = createSelector(
 );
 export const selectCheckoutSubtotal = createSelector(
   selectCheckout,
-  checkout => {
+  (checkout): string => {
     if (checkout) {
       return checkout.subtotalPrice;
+    } else {
+      return '0.00';
     }
   }
 );
-
-function diffPrices(total: string, subtotal: string): string {
-  const totalFloat = parseFloat(total);
-  const subtotalFloat = parseFloat(subtotal);
-  const resultFloat = totalFloat - subtotalFloat;
-  const resultRounded = Math.round(resultFloat * 100) / 100;
-  return resultRounded.toString(10);
-}
 
 export const selectCheckoutDiscount = createSelector(
   selectCheckout,
@@ -53,15 +47,28 @@ export const selectCheckoutDiscount = createSelector(
       !checkout ||
       !checkout.discountApplications ||
       !checkout.discountApplications.edges ||
-      !checkout.discountApplications.edges[0]
+      checkout.discountApplications.edges.length === 0
     ) {
       return null;
     }
-    const amount = diffPrices(checkout.totalPrice, checkout.subtotalPrice);
+
+    /**
+     * finds the first discount that is either:
+     * automatic (and therefore always applied) or
+     * a successfully applied promo code
+     */
+    const node = checkout.discountApplications.edges.find(
+      application =>
+        application.node.__typename !== 'DiscountCodeApplication' ||
+        application.node.applicable
+    ).node;
+    if (!node) {
+      return null;
+    }
 
     let name: string;
     let canRemove: boolean;
-    const node = checkout.discountApplications.edges[0].node;
+    const amount = 'unimplemented';
     if (node.__typename === 'DiscountCodeApplication') {
       name = node.code;
       canRemove = true;

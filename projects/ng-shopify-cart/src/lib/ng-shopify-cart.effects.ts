@@ -24,7 +24,10 @@ import {
   GetCheckoutGQL,
   CheckoutDiscountCodeRemoveGQL,
   CheckoutDiscountCodeRemoveMutation,
-  CheckoutDiscountCodeApplyV2Mutation
+  CheckoutDiscountCodeApplyV2Mutation,
+  CheckoutStateFragment,
+  LineItemPropertiesFragment,
+  CheckoutLineItemInput
 } from './generated/graphql';
 import {
   addToCheckout,
@@ -44,7 +47,10 @@ import {
   createCheckoutFailure,
   removeCoupon,
   removeCouponSuccess,
-  applyCouponFailure
+  applyCouponFailure,
+  incrementLineItemQuantitySuccess,
+  decrementLineItemQuantitySuccess,
+  removeLineItemSuccess
 } from './ng-shopify-cart.actions';
 import { IAppState } from './ng-shopify-cart.reducer';
 import { INgShopifyCartConfig } from './interfaces';
@@ -52,6 +58,31 @@ import {
   selectCheckout,
   selectCheckoutLineItems
 } from './ng-shopify-cart.selectors';
+
+/**
+ * We normalize the list of variantId/quantity tuples that we send to Shopify
+ * because if we don't it starts duplicating line items when automatic discounts
+ * are applied to some of them
+ */
+export function collectLineItems(
+  lineItems: LineItemPropertiesFragment[]
+): CheckoutLineItemInput[] {
+  const lineItemsMap = {} as { [variantId: string]: number };
+  for (const item of lineItems) {
+    lineItemsMap[item.variant.id] =
+      item.quantity + (lineItemsMap[item.variant.id] || 0);
+  }
+
+  return Object.entries(lineItemsMap).map(([variantId, quantity]) => ({
+    variantId,
+    quantity
+  }));
+}
+
+export function getVariantGraphqlId(variantId: number) {
+  // Make graphql id from rest api id (yes really..)
+  return btoa('gid://shopify/ProductVariant/' + variantId);
+}
 
 @Injectable()
 export class CartEffects {
@@ -62,10 +93,7 @@ export class CartEffects {
       ofType(addToCheckout),
       withLatestFrom(this.store.pipe(select(selectCheckout))),
       mergeMap(([action, checkout]) => {
-        // Make graphql id from rest api id (yes really..)
-        const variantGID = btoa(
-          'gid://shopify/ProductVariant/' + action.variantId
-        );
+        const variantGID = getVariantGraphqlId(action.variantId);
         const lineItems = [
           { variantId: variantGID, quantity: action.quantity }
         ];
@@ -203,16 +231,9 @@ export class CartEffects {
         if (checkout) {
           const data: CheckoutLineItemsReplaceMutationVariables = {
             checkoutId: checkout.id,
-            lineItems: checkout.lineItems.edges
-              .map(lineItem => {
-                return {
-                  variantId: lineItem.node.variant
-                    ? lineItem.node.variant.id
-                    : '',
-                  quantity: lineItem.node.quantity
-                };
-              })
-              .filter(lineItem => lineItem.variantId !== action.variantId)
+            lineItems: collectLineItems(
+              checkout.lineItems.edges.map(edge => edge.node)
+            ).filter(({ variantId }) => variantId !== action.variantId)
           };
           return this.checkoutLineItemsReplace.mutate(data).pipe(
             map(res => {
@@ -221,7 +242,7 @@ export class CartEffects {
                 mutation.checkoutLineItemsReplace &&
                 mutation.checkoutLineItemsReplace.checkout
               ) {
-                return setCheckout({
+                return removeLineItemSuccess({
                   checkout: mutation.checkoutLineItemsReplace.checkout
                 });
               }
@@ -249,23 +270,18 @@ export class CartEffects {
         if (checkout) {
           const data: CheckoutLineItemsReplaceMutationVariables = {
             checkoutId: checkout.id,
-            lineItems: checkout.lineItems.edges.map(lineItem => {
-              if (
-                lineItem.node.variant &&
-                action.variantId === lineItem.node.variant.id
-              ) {
+            lineItems: collectLineItems(
+              checkout.lineItems.edges.map(edge => edge.node)
+            ).map(({ variantId, quantity }) => {
+              if (variantId === action.variantId) {
                 return {
-                  variantId: lineItem.node.variant
-                    ? lineItem.node.variant.id
-                    : '',
-                  quantity: lineItem.node.quantity + 1
+                  variantId,
+                  quantity: quantity + 1
                 };
               } else {
                 return {
-                  variantId: lineItem.node.variant
-                    ? lineItem.node.variant.id
-                    : '',
-                  quantity: lineItem.node.quantity
+                  variantId,
+                  quantity
                 };
               }
             })
@@ -277,7 +293,7 @@ export class CartEffects {
                 mutation.checkoutLineItemsReplace &&
                 mutation.checkoutLineItemsReplace.checkout
               ) {
-                return setCheckout({
+                return incrementLineItemQuantitySuccess({
                   checkout: mutation.checkoutLineItemsReplace.checkout
                 });
               }
@@ -305,23 +321,18 @@ export class CartEffects {
         if (checkout) {
           const data: CheckoutLineItemsReplaceMutationVariables = {
             checkoutId: checkout.id,
-            lineItems: checkout.lineItems.edges.map(lineItem => {
-              if (
-                lineItem.node.variant &&
-                action.variantId === lineItem.node.variant.id
-              ) {
+            lineItems: collectLineItems(
+              checkout.lineItems.edges.map(edge => edge.node)
+            ).map(({ variantId, quantity }) => {
+              if (variantId === action.variantId) {
                 return {
-                  variantId: lineItem.node.variant
-                    ? lineItem.node.variant.id
-                    : '',
-                  quantity: lineItem.node.quantity - 1
+                  variantId,
+                  quantity: quantity - 1
                 };
               } else {
                 return {
-                  variantId: lineItem.node.variant
-                    ? lineItem.node.variant.id
-                    : '',
-                  quantity: lineItem.node.quantity
+                  variantId,
+                  quantity
                 };
               }
             })
@@ -333,7 +344,7 @@ export class CartEffects {
                 mutation.checkoutLineItemsReplace &&
                 mutation.checkoutLineItemsReplace.checkout
               ) {
-                return setCheckout({
+                return decrementLineItemQuantitySuccess({
                   checkout: mutation.checkoutLineItemsReplace.checkout
                 });
               }

@@ -4234,6 +4234,33 @@ export type CustomerAccessTokenCreateMutation = { __typename?: 'Mutation' } & {
   >;
 };
 
+export type LineItemPropertiesFragment = {
+  __typename?: 'CheckoutLineItem';
+} & Pick<CheckoutLineItem, 'id' | 'title' | 'quantity'> & {
+    discountAllocations: Array<
+      { __typename?: 'DiscountAllocation' } & {
+        allocatedAmount: { __typename?: 'MoneyV2' } & Pick<
+          MoneyV2,
+          'amount' | 'currencyCode'
+        >;
+      }
+    >;
+    variant: Maybe<
+      { __typename?: 'ProductVariant' } & Pick<
+        ProductVariant,
+        'id' | 'title' | 'price' | 'compareAtPrice' | 'availableForSale'
+      > & {
+          product: { __typename?: 'Product' } & Pick<Product, 'handle'>;
+          image: Maybe<
+            { __typename?: 'Image' } & Pick<
+              Image,
+              'id' | 'altText' | 'originalSrc' | 'transformedSrc'
+            >
+          >;
+        }
+    >;
+  };
+
 export type CheckoutStateFragment = { __typename?: 'Checkout' } & Pick<
   Checkout,
   'id' | 'webUrl' | 'subtotalPrice' | 'totalPrice'
@@ -4263,7 +4290,7 @@ export type CheckoutStateFragment = { __typename?: 'Checkout' } & Pick<
               >)
             | ({ __typename?: 'DiscountCodeApplication' } & Pick<
                 DiscountCodeApplication,
-                'code'
+                'applicable' | 'code'
               >));
         }
       >;
@@ -4271,32 +4298,9 @@ export type CheckoutStateFragment = { __typename?: 'Checkout' } & Pick<
     lineItems: { __typename?: 'CheckoutLineItemConnection' } & {
       edges: Array<
         { __typename?: 'CheckoutLineItemEdge' } & {
-          node: { __typename?: 'CheckoutLineItem' } & Pick<
-            CheckoutLineItem,
-            'id' | 'title' | 'quantity'
-          > & {
-              variant: Maybe<
-                { __typename?: 'ProductVariant' } & Pick<
-                  ProductVariant,
-                  | 'id'
-                  | 'title'
-                  | 'price'
-                  | 'compareAtPrice'
-                  | 'availableForSale'
-                > & {
-                    product: { __typename?: 'Product' } & Pick<
-                      Product,
-                      'handle'
-                    >;
-                    image: Maybe<
-                      { __typename?: 'Image' } & Pick<
-                        Image,
-                        'id' | 'altText' | 'originalSrc' | 'transformedSrc'
-                      >
-                    >;
-                  }
-              >;
-            };
+          node: {
+            __typename?: 'CheckoutLineItem';
+          } & LineItemPropertiesFragment;
         }
       >;
     };
@@ -4429,6 +4433,35 @@ export type CheckoutDiscountCodeRemoveMutation = { __typename?: 'Mutation' } & {
     }
   >;
 };
+export const LineItemPropertiesFragmentDoc = gql`
+  fragment lineItemProperties on CheckoutLineItem {
+    id
+    title
+    quantity
+    discountAllocations {
+      allocatedAmount {
+        amount
+        currencyCode
+      }
+    }
+    variant {
+      id
+      product {
+        handle
+      }
+      image {
+        id
+        altText
+        originalSrc
+        transformedSrc
+      }
+      title
+      price
+      compareAtPrice
+      availableForSale
+    }
+  }
+`;
 export const CheckoutStateFragmentDoc = gql`
   fragment checkoutState on Checkout {
     id
@@ -4452,6 +4485,7 @@ export const CheckoutStateFragmentDoc = gql`
             title
           }
           ... on DiscountCodeApplication {
+            applicable
             code
           }
         }
@@ -4460,29 +4494,12 @@ export const CheckoutStateFragmentDoc = gql`
     lineItems(first: 100) {
       edges {
         node {
-          id
-          title
-          quantity
-          variant {
-            id
-            product {
-              handle
-            }
-            image {
-              id
-              altText
-              originalSrc
-              transformedSrc
-            }
-            title
-            price
-            compareAtPrice
-            availableForSale
-          }
+          ...lineItemProperties
         }
       }
     }
   }
+  ${LineItemPropertiesFragmentDoc}
 `;
 export const CustomerAccessTokenCreateDocument = gql`
   mutation customerAccessTokenCreate($input: CustomerAccessTokenCreateInput!) {

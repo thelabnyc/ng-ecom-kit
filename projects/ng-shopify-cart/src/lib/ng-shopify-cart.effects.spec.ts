@@ -4,7 +4,8 @@ import { Observable } from 'rxjs';
 import { StoreModule } from '@ngrx/store';
 import { ApolloTestingModule } from 'apollo-angular/testing';
 
-import { CartEffects } from './ng-shopify-cart.effects';
+import { CartEffects, collectLineItems } from './ng-shopify-cart.effects';
+import { LineItemPropertiesFragment } from './generated/graphql';
 import { GetCheckoutGQL } from './generated/graphql';
 import { reducer } from './ng-shopify-cart.reducer';
 
@@ -69,4 +70,62 @@ describe('AppEffects', () => {
     expect(effects).toBeTruthy();
   });
   // We should have a test but jasmine marbles tests are so horrible and time consuming
+});
+
+describe('collectLineItems', () => {
+  it('returns an array of objects with variantId and quantity', () => {
+    const testData = [
+      {
+        variant: {
+          id: 'a'
+        },
+        quantity: 2
+      } as LineItemPropertiesFragment,
+      {
+        variant: {
+          id: 'b'
+        },
+        quantity: 1
+      } as LineItemPropertiesFragment,
+      {
+        variant: {
+          id: 'c'
+        },
+        quantity: 4
+      } as LineItemPropertiesFragment
+    ];
+
+    expect(collectLineItems(testData)).toEqual([
+      { variantId: 'a', quantity: 2 },
+      { variantId: 'b', quantity: 1 },
+      { variantId: 'c', quantity: 4 }
+    ]);
+  });
+
+  it('collapses duplicates into a single entry', () => {
+    const testData = [
+      {
+        variant: {
+          id: 'a'
+        },
+        quantity: 2
+      } as LineItemPropertiesFragment,
+      {
+        variant: {
+          id: 'a'
+        },
+        quantity: 3
+      } as LineItemPropertiesFragment,
+      {
+        variant: {
+          id: 'a'
+        },
+        quantity: 1
+      } as LineItemPropertiesFragment
+    ];
+
+    expect(collectLineItems(testData)).toEqual([
+      { variantId: 'a', quantity: 6 }
+    ]);
+  });
 });
