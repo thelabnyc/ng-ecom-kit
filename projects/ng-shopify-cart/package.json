@@ -2,7 +2,7 @@
   "name": "@ng-ecom-kit/ng-shopify-cart",
   "license": "MIT",
   "homepage": "https://gitlab.com/thelabnyc/ng-ecom-kit/tree/master/projects/ng-shopify-cart",
-  "version": "0.0.13",
+  "version": "0.0.14",
   "peerDependencies": {
     "@angular/common": "^8.1.1",
     "@angular/core": "^8.1.1",
