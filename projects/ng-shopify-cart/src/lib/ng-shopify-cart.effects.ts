@@ -128,6 +128,7 @@ export class CartEffects {
               if (createdCheckout) {
                 return addToCheckoutSuccess({ checkout: createdCheckout });
               }
+              return addToCheckoutFailure();
             }),
             catchError(err => {
               return of(addToCheckoutFailure());
