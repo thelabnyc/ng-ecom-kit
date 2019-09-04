@@ -50,7 +50,10 @@ import {
   applyCouponFailure,
   incrementLineItemQuantitySuccess,
   decrementLineItemQuantitySuccess,
-  removeLineItemSuccess
+  removeLineItemSuccess,
+  replaceCheckoutLineItems,
+  replaceCheckoutLineItemsSuccess,
+  replaceCheckoutLineItemsFailure
 } from './ng-shopify-cart.actions';
 import { IAppState } from './ng-shopify-cart.reducer';
 import { INgShopifyCartConfig } from './interfaces';
@@ -200,7 +203,7 @@ export class CartEffects {
     this.actions$.pipe(
       ofType(removeCoupon),
       withLatestFrom(this.store.pipe(select(selectCheckout))),
-      exhaustMap(([action, checkout]) => {
+      exhaustMap(([_, checkout]) => {
         if (checkout) {
           return this.checkoutDiscountCodeRemove
             .mutate({
@@ -221,13 +224,48 @@ export class CartEffects {
     )
   );
 
+  replaceLineItems$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(replaceCheckoutLineItems),
+      withLatestFrom(this.store.pipe(select(selectCheckout))),
+      exhaustMap(([action, checkout]) => {
+        if (!checkout) {
+          const data: CheckoutCreateMutationVariables = {
+            input: {
+              lineItems: action.lineItemInputs
+            }
+          };
+          return this.createCheckout(data, this.userAccessToken);
+        } else {
+          const data: CheckoutLineItemsReplaceMutationVariables = {
+            checkoutId: checkout.id,
+            lineItems: action.lineItemInputs
+          };
+          return this.checkoutLineItemsReplace.mutate(data);
+        }
+      }),
+      map(res => {
+        const mutation: CheckoutLineItemsReplaceMutation = res.data;
+        if (
+          mutation.checkoutLineItemsReplace &&
+          mutation.checkoutLineItemsReplace.checkout
+        ) {
+          return replaceCheckoutLineItemsSuccess({
+            checkout: mutation.checkoutLineItemsReplace.checkout
+          });
+        }
+      }),
+      catchError(err => {
+        console.error('Unable to replace cart line items', err);
+        return of(replaceCheckoutLineItemsFailure());
+      })
+    )
+  );
+
   removeLineItem$ = createEffect(() =>
     this.actions$.pipe(
       ofType(removeLineItem),
-      withLatestFrom(
-        this.store.pipe(select(selectCheckout)),
-        this.store.pipe(select(selectCheckoutLineItems))
-      ),
+      withLatestFrom(this.store.pipe(select(selectCheckout))),
       mergeMap(([action, checkout]) => {
         if (checkout) {
           const data: CheckoutLineItemsReplaceMutationVariables = {
