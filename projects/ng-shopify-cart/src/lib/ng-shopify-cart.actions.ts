@@ -1,5 +1,8 @@
 import { createAction, props } from '@ngrx/store';
-import { CheckoutStateFragment } from './generated/graphql';
+import {
+  CheckoutStateFragment,
+  CheckoutLineItemInput
+} from './generated/graphql';
 import { IVariantIdQuantity, IVariantShopifyIdQuantity } from './interfaces';
 
 export const refreshCart = createAction('[EcomKit/shop-cart] Refresh Cart');
@@ -23,6 +26,17 @@ export const setCheckout = createAction(
 );
 export const createCheckoutFailure = createAction(
   '[EcomKit/shop-cart] Create Checkout Failure'
+);
+export const replaceCheckoutLineItems = createAction(
+  '[EcomKit/shop-cart] Replace Checkout Line Items',
+  props<{ lineItemInputs: CheckoutLineItemInput[] }>()
+);
+export const replaceCheckoutLineItemsFailure = createAction(
+  '[EcomKit/shop-cart] Replace Checkout Line Items Failure'
+);
+export const replaceCheckoutLineItemsSuccess = createAction(
+  '[EcomKit/shop-cart] Replace Checkout Line Items Success',
+  props<{ checkout: CheckoutStateFragment }>()
 );
 export const applyCoupon = createAction(
   '[EcomKit/shop-cart] Apply Coupon',
