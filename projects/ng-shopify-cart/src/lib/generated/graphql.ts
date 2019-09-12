@@ -4243,6 +4243,16 @@ export type LineItemPropertiesFragment = {
           MoneyV2,
           'amount' | 'currencyCode'
         >;
+        discountApplication: {
+          __typename?:
+            | 'AutomaticDiscountApplication'
+            | 'DiscountCodeApplication'
+            | 'ManualDiscountApplication'
+            | 'ScriptDiscountApplication';
+        } & Pick<
+          DiscountApplication,
+          'allocationMethod' | 'targetSelection' | 'targetType'
+        >;
       }
     >;
     variant: Maybe<
@@ -4275,23 +4285,36 @@ export type CheckoutStateFragment = { __typename?: 'Checkout' } & Pick<
               | 'DiscountCodeApplication'
               | 'ManualDiscountApplication'
               | 'ScriptDiscountApplication';
-          } & (
-            | ({ __typename?: 'AutomaticDiscountApplication' } & Pick<
-                AutomaticDiscountApplication,
-                'title'
-              >)
-            | ({ __typename?: 'ManualDiscountApplication' } & Pick<
-                ManualDiscountApplication,
-                'title'
-              >)
-            | ({ __typename?: 'ScriptDiscountApplication' } & Pick<
-                ScriptDiscountApplication,
-                'title'
-              >)
-            | ({ __typename?: 'DiscountCodeApplication' } & Pick<
-                DiscountCodeApplication,
-                'applicable' | 'code'
-              >));
+          } & Pick<
+            DiscountApplication,
+            'allocationMethod' | 'targetSelection' | 'targetType'
+          > & {
+              value:
+                | ({ __typename?: 'MoneyV2' } & Pick<
+                    MoneyV2,
+                    'amount' | 'currencyCode'
+                  >)
+                | ({ __typename?: 'PricingPercentageValue' } & Pick<
+                    PricingPercentageValue,
+                    'percentage'
+                  >);
+            } & (
+              | ({ __typename?: 'AutomaticDiscountApplication' } & Pick<
+                  AutomaticDiscountApplication,
+                  'title'
+                >)
+              | ({ __typename?: 'ManualDiscountApplication' } & Pick<
+                  ManualDiscountApplication,
+                  'title'
+                >)
+              | ({ __typename?: 'ScriptDiscountApplication' } & Pick<
+                  ScriptDiscountApplication,
+                  'title'
+                >)
+              | ({ __typename?: 'DiscountCodeApplication' } & Pick<
+                  DiscountCodeApplication,
+                  'applicable' | 'code'
+                >));
         }
       >;
     };
@@ -4443,6 +4466,11 @@ export const LineItemPropertiesFragmentDoc = gql`
         amount
         currencyCode
       }
+      discountApplication {
+        allocationMethod
+        targetSelection
+        targetType
+      }
     }
     variant {
       id
@@ -4487,6 +4515,18 @@ export const CheckoutStateFragmentDoc = gql`
           ... on DiscountCodeApplication {
             applicable
             code
+          }
+          allocationMethod
+          targetSelection
+          targetType
+          value {
+            ... on MoneyV2 {
+              amount
+              currencyCode
+            }
+            ... on PricingPercentageValue {
+              percentage
+            }
           }
         }
       }

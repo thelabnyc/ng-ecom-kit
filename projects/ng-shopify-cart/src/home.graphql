@@ -24,6 +24,11 @@ fragment lineItemProperties on CheckoutLineItem {
       amount
       currencyCode
     }
+    discountApplication {
+      allocationMethod
+      targetSelection
+      targetType
+    }
   }
   variant {
     id
@@ -67,6 +72,18 @@ fragment checkoutState on Checkout {
         ... on DiscountCodeApplication {
           applicable
           code
+        }
+        allocationMethod
+        targetSelection
+        targetType
+        value {
+          ... on MoneyV2 {
+            amount
+            currencyCode
+          }
+          ... on PricingPercentageValue {
+            percentage
+          }
         }
       }
     }
