@@ -1,6 +1,7 @@
 import { createFeatureSelector, createSelector } from '@ngrx/store';
 import { IAppState, ICartState } from './ng-shopify-cart.reducer';
 import { IDiscount } from './interfaces';
+import { LineItemPropertiesFragment } from './generated/graphql';
 
 export const selectFeature = createFeatureSelector<IAppState, ICartState>(
   'cart'
@@ -12,7 +13,7 @@ export const selectCheckout = createSelector(
 );
 export const selectCheckoutLineItems = createSelector(
   selectCheckout,
-  checkout => {
+  (checkout): LineItemPropertiesFragment[] => {
     if (checkout) {
       return checkout.lineItems.edges
         .map(edge => {
@@ -27,6 +28,7 @@ export const selectCheckoutLineItems = createSelector(
             : 0;
         });
     }
+    return [];
   }
 );
 export const selectCheckoutSubtotal = createSelector(
