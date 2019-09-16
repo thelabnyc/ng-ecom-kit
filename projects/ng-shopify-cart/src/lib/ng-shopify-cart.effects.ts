@@ -5,7 +5,9 @@ import {
   withLatestFrom,
   map,
   exhaustMap,
-  catchError
+  catchError,
+  debounceTime,
+  bufferWhen
 } from 'rxjs/operators';
 import { Store, select } from '@ngrx/store';
 import { EMPTY, of } from 'rxjs';
@@ -298,24 +300,29 @@ export class CartEffects {
     )
   );
 
-  incrementLineItemQuantity$ = createEffect(() =>
-    this.actions$.pipe(
-      ofType(incrementLineItemQuantity),
-      withLatestFrom(
-        this.store.pipe(select(selectCheckout)),
-        this.store.pipe(select(selectCheckoutLineItems))
-      ),
-      mergeMap(([action, checkout]) => {
+  incrementLineItemQuantity$ = createEffect(() => {
+    const actions$ = this.actions$.pipe(ofType(incrementLineItemQuantity));
+    const debounced$ = actions$.pipe(debounceTime(200));
+
+    return actions$.pipe(
+      bufferWhen(() => debounced$),
+      withLatestFrom(this.store.pipe(select(selectCheckout))),
+      mergeMap(([actions, checkout]) => {
+        const changes = {};
+        actions.forEach(action => {
+          changes[action.variantId] = (changes[action.variantId] || 0) + 1;
+        });
+
         if (checkout) {
           const data: CheckoutLineItemsReplaceMutationVariables = {
             checkoutId: checkout.id,
             lineItems: collectLineItems(
               checkout.lineItems.edges.map(edge => edge.node)
             ).map(({ variantId, quantity }) => {
-              if (variantId === action.variantId) {
+              if (changes[variantId]) {
                 return {
                   variantId,
-                  quantity: quantity + 1
+                  quantity: quantity + changes[variantId]
                 };
               } else {
                 return {
@@ -346,27 +353,31 @@ export class CartEffects {
           return EMPTY;
         }
       })
-    )
-  );
+    );
+  });
 
-  decrementLineItemQuantity$ = createEffect(() =>
-    this.actions$.pipe(
-      ofType(decrementLineItemQuantity),
-      withLatestFrom(
-        this.store.pipe(select(selectCheckout)),
-        this.store.pipe(select(selectCheckoutLineItems))
-      ),
-      mergeMap(([action, checkout]) => {
+  decrementLineItemQuantity$ = createEffect(() => {
+    const actions$ = this.actions$.pipe(ofType(decrementLineItemQuantity));
+    const debounced$ = actions$.pipe(debounceTime(200));
+    return actions$.pipe(
+      bufferWhen(() => debounced$),
+      withLatestFrom(this.store.pipe(select(selectCheckout))),
+      mergeMap(([actions, checkout]) => {
+        const changes = {};
+        actions.forEach(action => {
+          changes[action.variantId] = (changes[action.variantId] || 0) + 1;
+        });
+
         if (checkout) {
           const data: CheckoutLineItemsReplaceMutationVariables = {
             checkoutId: checkout.id,
             lineItems: collectLineItems(
               checkout.lineItems.edges.map(edge => edge.node)
             ).map(({ variantId, quantity }) => {
-              if (variantId === action.variantId) {
+              if (changes[variantId]) {
                 return {
                   variantId,
-                  quantity: quantity - 1
+                  quantity: quantity - changes[variantId]
                 };
               } else {
                 return {
@@ -397,8 +408,8 @@ export class CartEffects {
           return EMPTY;
         }
       })
-    )
-  );
+    );
+  });
 
   createCheckout$ = createEffect(() =>
     this.actions$.pipe(
