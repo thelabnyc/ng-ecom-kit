@@ -1,6 +1,9 @@
 import { Injectable, Inject, PLATFORM_ID } from '@angular/core';
-import { isPlatformBrowser } from '@angular/common';
+import { isPlatformBrowser, isPlatformServer } from '@angular/common';
 import { INgYotpoConfig } from './interfaces';
+import { HttpClient } from '@angular/common/http';
+import { map, catchError } from 'rxjs/operators';
+import { of, empty } from 'rxjs';
 
 declare var yotpo: {
   initWidgets: () => void;
@@ -13,7 +16,8 @@ declare var yotpo: {
 export class YotpoService {
   constructor(
     @Inject('ngYotpoConfig') private config: INgYotpoConfig,
-    @Inject(PLATFORM_ID) private platformId: Object
+    @Inject(PLATFORM_ID) private platformId: Object,
+    private http: HttpClient
   ) {}
 
   getWidgetJSUrl() {
@@ -43,6 +47,42 @@ export class YotpoService {
     }
     if (this.isYotpoLoaded()) {
       setTimeout(() => yotpo.refreshWidgets());
+    }
+  }
+
+  getHtmlString(pid: string) {
+    if (isPlatformServer(this.platformId)) {
+      return this.http
+        .post<{ result: string }[]>(
+          'https://staticw2.yotpo.com/batch',
+          {
+            app_key: this.config.apiKey,
+            methods: [
+              {
+                method: 'main_widget',
+                params: {
+                  pid
+                }
+              }
+            ]
+          },
+          {
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            responseType: 'json'
+          }
+        )
+        .pipe(
+          map(response => (response[0] ? response[0].result : '')),
+          catchError(err => {
+            console.error('boingo');
+            console.error(err);
+            return empty();
+          })
+        );
+    } else {
+      return of('');
     }
   }
 }
