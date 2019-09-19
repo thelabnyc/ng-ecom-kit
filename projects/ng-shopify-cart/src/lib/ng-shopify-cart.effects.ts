@@ -27,7 +27,6 @@ import {
   CheckoutDiscountCodeRemoveGQL,
   CheckoutDiscountCodeRemoveMutation,
   CheckoutDiscountCodeApplyV2Mutation,
-  CheckoutStateFragment,
   LineItemPropertiesFragment,
   CheckoutLineItemInput
 } from './generated/graphql';
@@ -59,10 +58,7 @@ import {
 } from './ng-shopify-cart.actions';
 import { IAppState } from './ng-shopify-cart.reducer';
 import { INgShopifyCartConfig } from './interfaces';
-import {
-  selectCheckout,
-  selectCheckoutLineItems
-} from './ng-shopify-cart.selectors';
+import { selectCheckout } from './ng-shopify-cart.selectors';
 
 /**
  * We normalize the list of variantId/quantity tuples that we send to Shopify
@@ -92,6 +88,7 @@ export function getVariantGraphqlId(variantId: number) {
 @Injectable()
 export class CartEffects {
   private userAccessToken: string | null;
+  debouncer = debounceTime(500);
 
   addToCart$ = createEffect(() =>
     this.actions$.pipe(
@@ -302,7 +299,7 @@ export class CartEffects {
 
   incrementLineItemQuantity$ = createEffect(() => {
     const actions$ = this.actions$.pipe(ofType(incrementLineItemQuantity));
-    const debounced$ = actions$.pipe(debounceTime(200));
+    const debounced$ = actions$.pipe(this.debouncer);
 
     return actions$.pipe(
       bufferWhen(() => debounced$),
@@ -358,7 +355,7 @@ export class CartEffects {
 
   decrementLineItemQuantity$ = createEffect(() => {
     const actions$ = this.actions$.pipe(ofType(decrementLineItemQuantity));
-    const debounced$ = actions$.pipe(debounceTime(200));
+    const debounced$ = actions$.pipe(this.debouncer);
     return actions$.pipe(
       bufferWhen(() => debounced$),
       withLatestFrom(this.store.pipe(select(selectCheckout))),
