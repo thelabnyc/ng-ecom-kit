@@ -98,6 +98,8 @@ export const selectCheckoutItemCount = createSelector(
         itemQuantity += edge.node.quantity;
       });
       return itemQuantity;
+    } else {
+      return 0;
     }
   }
 );
