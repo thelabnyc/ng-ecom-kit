@@ -4481,7 +4481,7 @@ export const LineItemPropertiesFragmentDoc = gql`
         id
         altText
         originalSrc
-        transformedSrc
+        transformedSrc(maxHeight: 200, maxWidth: 200)
       }
       title
       price
