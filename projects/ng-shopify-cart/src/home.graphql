@@ -15,6 +15,34 @@ mutation customerAccessTokenCreate($input: CustomerAccessTokenCreateInput!) {
   }
 }
 
+fragment fullDiscountApplication on DiscountApplication {
+  ... on AutomaticDiscountApplication {
+    title
+  }
+  ... on ManualDiscountApplication {
+    title
+  }
+  ... on ScriptDiscountApplication {
+    title
+  }
+  ... on DiscountCodeApplication {
+    applicable
+    code
+  }
+  allocationMethod
+  targetSelection
+  targetType
+  value {
+    ... on MoneyV2 {
+      amount
+      currencyCode
+    }
+    ... on PricingPercentageValue {
+      percentage
+    }
+  }
+}
+
 fragment lineItemProperties on CheckoutLineItem {
   id
   title
@@ -25,9 +53,7 @@ fragment lineItemProperties on CheckoutLineItem {
       currencyCode
     }
     discountApplication {
-      allocationMethod
-      targetSelection
-      targetType
+      ...fullDiscountApplication
     }
   }
   variant {
@@ -60,31 +86,7 @@ fragment checkoutState on Checkout {
   discountApplications(first:100) {
     edges {
       node {
-        ... on AutomaticDiscountApplication {
-          title
-        }
-        ... on ManualDiscountApplication {
-          title
-        }
-        ... on ScriptDiscountApplication {
-          title
-        }
-        ... on DiscountCodeApplication {
-          applicable
-          code
-        }
-        allocationMethod
-        targetSelection
-        targetType
-        value {
-          ... on MoneyV2 {
-            amount
-            currencyCode
-          }
-          ... on PricingPercentageValue {
-            percentage
-          }
-        }
+        ...fullDiscountApplication
       }
     }
   }

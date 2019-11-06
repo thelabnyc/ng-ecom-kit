@@ -70,13 +70,33 @@ export const selectCheckoutDiscount = createSelector(
 
     let name: string;
     let canRemove: boolean;
-    const amount = 'unimplemented';
     if (node.__typename === 'DiscountCodeApplication') {
       name = node.code;
       canRemove = true;
     } else {
       name = node.title;
       canRemove = false;
+    }
+
+    let amount: string;
+    if (
+      node.allocationMethod === 'ACROSS' &&
+      node.value.__typename === 'MoneyV2'
+    ) {
+      amount = node.value.amount;
+    } else {
+      amount = checkout.lineItems.edges
+        .reduce(
+          (total, item) =>
+            total +
+            item.node.discountAllocations.reduce(
+              (subtotal, allocation) =>
+                subtotal + parseFloat(allocation.allocatedAmount.amount),
+              0
+            ),
+          0
+        )
+        .toFixed(2);
     }
 
     return { amount, name, canRemove };

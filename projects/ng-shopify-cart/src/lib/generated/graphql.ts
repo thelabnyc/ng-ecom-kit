@@ -4234,6 +4234,40 @@ export type CustomerAccessTokenCreateMutation = { __typename?: 'Mutation' } & {
   >;
 };
 
+export type FullDiscountApplicationFragment = {
+  __typename?:
+    | 'AutomaticDiscountApplication'
+    | 'DiscountCodeApplication'
+    | 'ManualDiscountApplication'
+    | 'ScriptDiscountApplication';
+} & Pick<
+  DiscountApplication,
+  'allocationMethod' | 'targetSelection' | 'targetType'
+> & {
+    value:
+      | ({ __typename?: 'MoneyV2' } & Pick<MoneyV2, 'amount' | 'currencyCode'>)
+      | ({ __typename?: 'PricingPercentageValue' } & Pick<
+          PricingPercentageValue,
+          'percentage'
+        >);
+  } & (
+    | ({ __typename?: 'AutomaticDiscountApplication' } & Pick<
+        AutomaticDiscountApplication,
+        'title'
+      >)
+    | ({ __typename?: 'ManualDiscountApplication' } & Pick<
+        ManualDiscountApplication,
+        'title'
+      >)
+    | ({ __typename?: 'ScriptDiscountApplication' } & Pick<
+        ScriptDiscountApplication,
+        'title'
+      >)
+    | ({ __typename?: 'DiscountCodeApplication' } & Pick<
+        DiscountCodeApplication,
+        'applicable' | 'code'
+      >));
+
 export type LineItemPropertiesFragment = {
   __typename?: 'CheckoutLineItem';
 } & Pick<CheckoutLineItem, 'id' | 'title' | 'quantity'> & {
@@ -4249,10 +4283,7 @@ export type LineItemPropertiesFragment = {
             | 'DiscountCodeApplication'
             | 'ManualDiscountApplication'
             | 'ScriptDiscountApplication';
-        } & Pick<
-          DiscountApplication,
-          'allocationMethod' | 'targetSelection' | 'targetType'
-        >;
+        } & FullDiscountApplicationFragment;
       }
     >;
     variant: Maybe<
@@ -4285,36 +4316,7 @@ export type CheckoutStateFragment = { __typename?: 'Checkout' } & Pick<
               | 'DiscountCodeApplication'
               | 'ManualDiscountApplication'
               | 'ScriptDiscountApplication';
-          } & Pick<
-            DiscountApplication,
-            'allocationMethod' | 'targetSelection' | 'targetType'
-          > & {
-              value:
-                | ({ __typename?: 'MoneyV2' } & Pick<
-                    MoneyV2,
-                    'amount' | 'currencyCode'
-                  >)
-                | ({ __typename?: 'PricingPercentageValue' } & Pick<
-                    PricingPercentageValue,
-                    'percentage'
-                  >);
-            } & (
-              | ({ __typename?: 'AutomaticDiscountApplication' } & Pick<
-                  AutomaticDiscountApplication,
-                  'title'
-                >)
-              | ({ __typename?: 'ManualDiscountApplication' } & Pick<
-                  ManualDiscountApplication,
-                  'title'
-                >)
-              | ({ __typename?: 'ScriptDiscountApplication' } & Pick<
-                  ScriptDiscountApplication,
-                  'title'
-                >)
-              | ({ __typename?: 'DiscountCodeApplication' } & Pick<
-                  DiscountCodeApplication,
-                  'applicable' | 'code'
-                >));
+          } & FullDiscountApplicationFragment;
         }
       >;
     };
@@ -4456,6 +4458,35 @@ export type CheckoutDiscountCodeRemoveMutation = { __typename?: 'Mutation' } & {
     }
   >;
 };
+export const FullDiscountApplicationFragmentDoc = gql`
+  fragment fullDiscountApplication on DiscountApplication {
+    ... on AutomaticDiscountApplication {
+      title
+    }
+    ... on ManualDiscountApplication {
+      title
+    }
+    ... on ScriptDiscountApplication {
+      title
+    }
+    ... on DiscountCodeApplication {
+      applicable
+      code
+    }
+    allocationMethod
+    targetSelection
+    targetType
+    value {
+      ... on MoneyV2 {
+        amount
+        currencyCode
+      }
+      ... on PricingPercentageValue {
+        percentage
+      }
+    }
+  }
+`;
 export const LineItemPropertiesFragmentDoc = gql`
   fragment lineItemProperties on CheckoutLineItem {
     id
@@ -4467,9 +4498,7 @@ export const LineItemPropertiesFragmentDoc = gql`
         currencyCode
       }
       discountApplication {
-        allocationMethod
-        targetSelection
-        targetType
+        ...fullDiscountApplication
       }
     }
     variant {
@@ -4489,6 +4518,7 @@ export const LineItemPropertiesFragmentDoc = gql`
       availableForSale
     }
   }
+  ${FullDiscountApplicationFragmentDoc}
 `;
 export const CheckoutStateFragmentDoc = gql`
   fragment checkoutState on Checkout {
@@ -4503,31 +4533,7 @@ export const CheckoutStateFragmentDoc = gql`
     discountApplications(first: 100) {
       edges {
         node {
-          ... on AutomaticDiscountApplication {
-            title
-          }
-          ... on ManualDiscountApplication {
-            title
-          }
-          ... on ScriptDiscountApplication {
-            title
-          }
-          ... on DiscountCodeApplication {
-            applicable
-            code
-          }
-          allocationMethod
-          targetSelection
-          targetType
-          value {
-            ... on MoneyV2 {
-              amount
-              currencyCode
-            }
-            ... on PricingPercentageValue {
-              percentage
-            }
-          }
+          ...fullDiscountApplication
         }
       }
     }
@@ -4539,6 +4545,7 @@ export const CheckoutStateFragmentDoc = gql`
       }
     }
   }
+  ${FullDiscountApplicationFragmentDoc}
   ${LineItemPropertiesFragmentDoc}
 `;
 export const CustomerAccessTokenCreateDocument = gql`
