@@ -16,7 +16,6 @@ import { Observable } from 'rxjs';
     >
       <div [innerHTML]="htmlString$ | async"></div>
     </div>
-    ,
   `
 })
 export class YotpoReviewsWidgetComponent implements OnChanges, OnInit {
