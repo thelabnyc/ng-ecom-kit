@@ -64,6 +64,18 @@ const result: IntrospectionResultData = {
           },
           {
             name: 'Payment'
+          },
+          {
+            name: 'ExternalVideo'
+          },
+          {
+            name: 'MediaImage'
+          },
+          {
+            name: 'Model3d'
+          },
+          {
+            name: 'Video'
           }
         ]
       },
@@ -93,6 +105,24 @@ const result: IntrospectionResultData = {
       },
       {
         kind: 'INTERFACE',
+        name: 'Media',
+        possibleTypes: [
+          {
+            name: 'ExternalVideo'
+          },
+          {
+            name: 'MediaImage'
+          },
+          {
+            name: 'Model3d'
+          },
+          {
+            name: 'Video'
+          }
+        ]
+      },
+      {
+        kind: 'INTERFACE',
         name: 'DiscountApplication',
         possibleTypes: [
           {
@@ -114,10 +144,10 @@ const result: IntrospectionResultData = {
         name: 'PricingValue',
         possibleTypes: [
           {
-            name: 'PricingPercentageValue'
+            name: 'MoneyV2'
           },
           {
-            name: 'MoneyV2'
+            name: 'PricingPercentageValue'
           }
         ]
       },
