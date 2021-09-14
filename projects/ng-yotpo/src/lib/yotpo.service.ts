@@ -21,7 +21,7 @@ export class YotpoService {
   ) {}
 
   getWidgetJSUrl() {
-    return `//staticw2.yotpo.com/${this.config.apiKey}/widget.js`;
+    return `https://staticw2.yotpo.com/${this.config.apiKey}/widget.js`;
   }
 
   loadJS() {
