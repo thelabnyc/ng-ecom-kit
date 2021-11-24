@@ -83,7 +83,20 @@ export const selectCheckoutDiscount = createSelector(
       node.allocationMethod === 'ACROSS' &&
       node.value.__typename === 'MoneyV2'
     ) {
-      amount = node.value.amount;
+      amount = checkout.discountApplications.edges
+        .filter(({ node: other }) => {
+          if ('title' in other && 'title' in node)
+            return other.title === node.title;
+          else if ('code' in other && 'code' in node)
+            return other.code === node.code;
+          else return false;
+        })
+        .reduce((total, edge) => {
+          if (edge.node.value.__typename === 'MoneyV2')
+            return total + parseFloat(edge.node.value.amount);
+          else return total;
+        }, 0)
+        .toFixed(2);
     } else {
       amount = checkout.lineItems.edges
         .reduce(
