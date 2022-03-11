@@ -15,82 +15,73 @@ mutation customerAccessTokenCreate($input: CustomerAccessTokenCreateInput!) {
   }
 }
 
-fragment fullDiscountApplication on DiscountApplication {
-  ... on AutomaticDiscountApplication {
+fragment fullDiscountAllocation on CartDiscountAllocation {
+  ... on CartAutomaticDiscountAllocation {
     title
   }
-  ... on ManualDiscountApplication {
-    title
-  }
-  ... on ScriptDiscountApplication {
-    title
-  }
-  ... on DiscountCodeApplication {
-    applicable
+  ... on CartCodeDiscountAllocation {
     code
   }
-  allocationMethod
-  targetSelection
-  targetType
-  value {
-    ... on MoneyV2 {
-      amount
-      currencyCode
-    }
-    ... on PricingPercentageValue {
-      percentage
-    }
+  discountedAmount {
+    amount
+    currencyCode
   }
 }
 
-fragment lineItemProperties on CheckoutLineItem {
+fragment lineItemProperties on CartLine {
   id
-  title
   quantity
   discountAllocations {
-    allocatedAmount {
-      amount
-      currencyCode
-    }
-    discountApplication {
-      ...fullDiscountApplication
-    }
+    ...fullDiscountAllocation
   }
-  variant {
-    id
-    product{
-      handle
-    }
-    image {
+  merchandise {
+    ... on ProductVariant {
       id
-      altText
-      originalSrc
-      transformedSrc(maxHeight: 200, maxWidth: 200)
-    }
-    title
-    price
-    compareAtPrice
-    availableForSale
-  }
-}
-
-fragment checkoutState on Checkout {
-  id
-  webUrl
-  subtotalPrice
-  totalPrice
-  order {
-    id
-    orderNumber
-  }
-  discountApplications(first:100) {
-    edges {
-      node {
-        ...fullDiscountApplication
+      image {
+        id
+        altText
+        originalSrc
+        transformedSrc(maxHeight: 200, maxWidth: 200)
+      }
+      title
+      price
+      compareAtPrice
+      availableForSale
+      product {
+        id
+        title
+        handle
       }
     }
   }
-  lineItems(first: 100) {
+}
+
+fragment checkoutState on Cart {
+  id
+  checkoutUrl
+  estimatedCost {
+    subtotalAmount {
+      amount
+      currencyCode
+    }
+    totalAmount {
+      amount
+      currencyCode
+    }
+    totalDutyAmount {
+      amount
+      currencyCode
+    }
+    totalTaxAmount {
+      amount
+      currencyCode
+    }
+  }
+  discountCodes {
+    applicable
+    code
+  }
+  lines(first: 100) {
     edges {
       node {
         ...lineItemProperties
@@ -99,40 +90,50 @@ fragment checkoutState on Checkout {
   }
 }
 
-mutation checkoutCreate($input: CheckoutCreateInput!) {
-  checkoutCreate(input: $input) {
+mutation checkoutCreate($input: CartInput!) {
+  cartCreate(input: $input) {
     userErrors {
       field
       message
     }
-    checkout {
+    cart {
       ...checkoutState
     }
-    checkoutUserErrors {
+  }
+}
+
+mutation checkoutLineItemsAdd($lineItems: [CartLineInput!]!, $cartId: ID!) {
+  cartLinesAdd(lines: $lineItems, cartId: $cartId) {
+    cart {
+      ...checkoutState
+    }
+    userErrors {
       field
       message
     }
   }
 }
 
-mutation checkoutLineItemsAdd(
-  $lineItems: [CheckoutLineItemInput!]!
-  $checkoutId: ID!
-) {
-  checkoutLineItemsAdd(lineItems: $lineItems, checkoutId: $checkoutId) {
-    checkout {
+mutation cartLinesRemove($cartId: ID!, $lineIds: [ID!]!) {
+  cartLinesRemove(cartId: $cartId, lineIds: $lineIds) {
+    cart {
       ...checkoutState
+    }
+    userErrors {
+      field
+      message
     }
   }
 }
 
-mutation checkoutLineItemsReplace(
-  $lineItems: [CheckoutLineItemInput!]!
-  $checkoutId: ID!
-) {
-  checkoutLineItemsReplace(lineItems: $lineItems, checkoutId: $checkoutId) {
-    checkout {
+mutation cartLinesUpdate($cartId: ID!, $lines: [CartLineUpdateInput!]!) {
+  cartLinesUpdate(cartId: $cartId, lines: $lines) {
+    cart {
       ...checkoutState
+    }
+    userErrors {
+      field
+      message
     }
   }
 }
@@ -140,7 +141,7 @@ mutation checkoutLineItemsReplace(
 query getCheckout($input: ID!) {
   node(id: $input) {
     id
-    ... on Checkout {
+    ... on Cart {
       ...checkoutState
     }
   }
@@ -150,45 +151,44 @@ mutation checkoutCustomerAssociateV2(
   $checkoutId: ID!
   $customerAccessToken: String!
 ) {
-  checkoutCustomerAssociateV2(
-    checkoutId: $checkoutId
-    customerAccessToken: $customerAccessToken
+  cartBuyerIdentityUpdate(
+    cartId: $checkoutId
+    buyerIdentity: { customerAccessToken: $customerAccessToken }
   ) {
     userErrors {
       field
       message
     }
-    checkout {
+    cart {
       id
-    }
-    customer {
-      id
+      buyerIdentity {
+        customer {
+          id
+        }
+      }
     }
   }
 }
 
 mutation checkoutDiscountCodeApplyV2($discountCode: String!, $checkoutId: ID!) {
-  checkoutDiscountCodeApplyV2(
-    discountCode: $discountCode
-    checkoutId: $checkoutId
-  ) {
+  cartDiscountCodesUpdate(cartId: $checkoutId, discountCodes: [$discountCode]) {
     userErrors {
       field
       message
     }
-    checkout {
+    cart {
       ...checkoutState
     }
   }
 }
 
 mutation checkoutDiscountCodeRemove($checkoutId: ID!) {
-  checkoutDiscountCodeRemove(checkoutId: $checkoutId) {
+  cartDiscountCodesUpdate(cartId: $checkoutId, discountCodes: []) {
     userErrors {
       field
       message
     }
-    checkout {
+    cart {
       ...checkoutState
     }
   }

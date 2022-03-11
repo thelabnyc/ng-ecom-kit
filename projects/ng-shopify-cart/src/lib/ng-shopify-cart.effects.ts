@@ -20,15 +20,16 @@ import {
   CheckoutLineItemsAddMutationVariables,
   CheckoutCustomerAssociateV2GQL,
   CheckoutDiscountCodeApplyV2GQL,
-  CheckoutLineItemsReplaceMutation,
-  CheckoutLineItemsReplaceMutationVariables,
-  CheckoutLineItemsReplaceGQL,
   GetCheckoutGQL,
   CheckoutDiscountCodeRemoveGQL,
   CheckoutDiscountCodeRemoveMutation,
   CheckoutDiscountCodeApplyV2Mutation,
-  LineItemPropertiesFragment,
-  CheckoutLineItemInput
+  CartLinesRemoveGQL,
+  CartLinesRemoveMutation,
+  CartLinesRemoveMutationVariables,
+  CartLinesUpdateGQL,
+  CartLinesUpdateMutationVariables,
+  CartLinesUpdateMutation
 } from './generated/graphql';
 import {
   addToCheckout,
@@ -51,34 +52,11 @@ import {
   applyCouponFailure,
   incrementLineItemQuantitySuccess,
   decrementLineItemQuantitySuccess,
-  removeLineItemSuccess,
-  replaceCheckoutLineItems,
-  replaceCheckoutLineItemsSuccess,
-  replaceCheckoutLineItemsFailure
+  removeLineItemSuccess
 } from './ng-shopify-cart.actions';
 import { IAppState } from './ng-shopify-cart.reducer';
 import { INgShopifyCartConfig } from './interfaces';
 import { selectCheckout } from './ng-shopify-cart.selectors';
-
-/**
- * We normalize the list of variantId/quantity tuples that we send to Shopify
- * because if we don't it starts duplicating line items when automatic discounts
- * are applied to some of them
- */
-export function collectLineItems(
-  lineItems: LineItemPropertiesFragment[]
-): CheckoutLineItemInput[] {
-  const lineItemsMap = {} as { [variantId: string]: number };
-  for (const item of lineItems) {
-    lineItemsMap[item.variant.id] =
-      item.quantity + (lineItemsMap[item.variant.id] || 0);
-  }
-
-  return Object.entries(lineItemsMap).map(([variantId, quantity]) => ({
-    variantId,
-    quantity
-  }));
-}
 
 export function getVariantGraphqlId(variantId: number) {
   // Make graphql id from rest api id (yes really..)
@@ -97,22 +75,23 @@ export class CartEffects {
       mergeMap(([action, checkout]) => {
         const variantGID = getVariantGraphqlId(action.variantId);
         const lineItems = [
-          { variantId: variantGID, quantity: action.quantity }
+          {
+            merchandiseId: variantGID,
+            quantity: action.quantity,
+            sellingPlan: action.sellingPlanId
+          }
         ];
         if (checkout) {
           const data: CheckoutLineItemsAddMutationVariables = {
-            checkoutId: checkout.id,
+            cartId: checkout.id,
             lineItems
           };
           return this.checkoutLineItemsAdd.mutate(data).pipe(
             map(res => {
               const mutation: CheckoutLineItemsAddMutation = res.data;
-              if (
-                mutation.checkoutLineItemsAdd &&
-                mutation.checkoutLineItemsAdd.checkout
-              ) {
+              if (mutation.cartLinesAdd && mutation.cartLinesAdd.cart) {
                 return addToCheckoutSuccess({
-                  checkout: mutation.checkoutLineItemsAdd.checkout
+                  checkout: mutation.cartLinesAdd.cart
                 });
               }
               return addToCheckoutFailure();
@@ -123,7 +102,7 @@ export class CartEffects {
           );
         } else {
           const data: CheckoutCreateMutationVariables = {
-            input: { lineItems }
+            input: { lines: lineItems }
           };
           return this.createCheckout(data, this.userAccessToken).pipe(
             map(createdCheckout => {
@@ -151,11 +130,7 @@ export class CartEffects {
             map(({ data }) => {
               if (data.node) {
                 // If order is set, then the order is completed. Clear the cart.
-                if (data.node.order) {
-                  return clearCart();
-                } else {
-                  return setCheckout({ checkout: data.node });
-                }
+                return setCheckout({ checkout: data.node });
               } else {
                 // There is no corresponding checkout, this often happens after a shopify outage.
                 return clearCart();
@@ -181,7 +156,7 @@ export class CartEffects {
         } else {
           const data: CheckoutCreateMutationVariables = {
             input: {
-              lineItems: []
+              lines: []
             }
           };
           return this.createCheckout(data, this.userAccessToken).pipe(
@@ -213,50 +188,12 @@ export class CartEffects {
                 const mutation: CheckoutDiscountCodeRemoveMutation =
                   response.data;
                 return removeCouponSuccess({
-                  checkout: mutation.checkoutDiscountCodeRemove.checkout
+                  checkout: mutation.cartDiscountCodesUpdate.cart
                 });
               })
             );
         }
         return EMPTY;
-      })
-    )
-  );
-
-  replaceLineItems$ = createEffect(() =>
-    this.actions$.pipe(
-      ofType(replaceCheckoutLineItems),
-      withLatestFrom(this.store.pipe(select(selectCheckout))),
-      exhaustMap(([action, checkout]) => {
-        if (!checkout) {
-          const data: CheckoutCreateMutationVariables = {
-            input: {
-              lineItems: action.lineItemInputs
-            }
-          };
-          return this.createCheckout(data, this.userAccessToken);
-        } else {
-          const data: CheckoutLineItemsReplaceMutationVariables = {
-            checkoutId: checkout.id,
-            lineItems: action.lineItemInputs
-          };
-          return this.checkoutLineItemsReplace.mutate(data);
-        }
-      }),
-      map(res => {
-        const mutation: CheckoutLineItemsReplaceMutation = res.data;
-        if (
-          mutation.checkoutLineItemsReplace &&
-          mutation.checkoutLineItemsReplace.checkout
-        ) {
-          return replaceCheckoutLineItemsSuccess({
-            checkout: mutation.checkoutLineItemsReplace.checkout
-          });
-        }
-      }),
-      catchError(err => {
-        console.error('Unable to replace cart line items', err);
-        return of(replaceCheckoutLineItemsFailure());
       })
     )
   );
@@ -267,28 +204,22 @@ export class CartEffects {
       withLatestFrom(this.store.pipe(select(selectCheckout))),
       mergeMap(([action, checkout]) => {
         if (checkout) {
-          const data: CheckoutLineItemsReplaceMutationVariables = {
-            checkoutId: checkout.id,
-            lineItems: collectLineItems(
-              checkout.lineItems.edges.map(edge => edge.node)
-            ).filter(({ variantId }) => variantId !== action.variantId)
+          const data: CartLinesRemoveMutationVariables = {
+            cartId: checkout.id,
+            lineIds: [action.lineId]
           };
-          return this.checkoutLineItemsReplace.mutate(data).pipe(
-            map(res => {
-              const mutation: CheckoutLineItemsReplaceMutation = res.data;
-              if (
-                mutation.checkoutLineItemsReplace &&
-                mutation.checkoutLineItemsReplace.checkout
-              ) {
+          return this.cartLinesRemove.mutate(data).pipe(
+            map(response => {
+              const mutation: CartLinesRemoveMutation = response.data;
+              if (mutation.cartLinesRemove.userErrors.length) {
+                return removeLineItemFailure();
+              } else {
                 return removeLineItemSuccess({
-                  checkout: mutation.checkoutLineItemsReplace.checkout
+                  checkout: mutation.cartLinesRemove.cart
                 });
               }
             }),
-            catchError(err => {
-              console.error('Unable to remove line item from cart', err);
-              return of(removeLineItemFailure());
-            })
+            catchError(() => of(removeLineItemFailure()))
           );
         } else {
           return EMPTY;
@@ -305,39 +236,36 @@ export class CartEffects {
       bufferWhen(() => debounced$),
       withLatestFrom(this.store.pipe(select(selectCheckout))),
       mergeMap(([actions, checkout]) => {
-        const changes = {};
+        const changes: { [lineId: string]: number } = {};
         actions.forEach(action => {
-          changes[action.variantId] = (changes[action.variantId] || 0) + 1;
+          changes[action.lineId] = (changes[action.lineId] || 0) + 1;
         });
 
         if (checkout) {
-          const data: CheckoutLineItemsReplaceMutationVariables = {
-            checkoutId: checkout.id,
-            lineItems: collectLineItems(
-              checkout.lineItems.edges.map(edge => edge.node)
-            ).map(({ variantId, quantity }) => {
-              if (changes[variantId]) {
-                return {
-                  variantId,
-                  quantity: quantity + changes[variantId]
-                };
-              } else {
-                return {
-                  variantId,
-                  quantity
-                };
-              }
-            })
+          const data: CartLinesUpdateMutationVariables = {
+            cartId: checkout.id,
+            lines: checkout.lines.edges
+              .filter(({ node }) => changes[node.id])
+              .map(({ node: { id, quantity } }) => {
+                if (changes[id]) {
+                  return {
+                    id,
+                    quantity: quantity + changes[id]
+                  };
+                } else {
+                  return {
+                    id,
+                    quantity
+                  };
+                }
+              })
           };
-          return this.checkoutLineItemsReplace.mutate(data).pipe(
+          return this.cartLinesUpdate.mutate(data).pipe(
             map(res => {
-              const mutation: CheckoutLineItemsReplaceMutation = res.data;
-              if (
-                mutation.checkoutLineItemsReplace &&
-                mutation.checkoutLineItemsReplace.checkout
-              ) {
+              const mutation: CartLinesUpdateMutation = res.data;
+              if (mutation.cartLinesUpdate && mutation.cartLinesUpdate.cart) {
                 return incrementLineItemQuantitySuccess({
-                  checkout: mutation.checkoutLineItemsReplace.checkout
+                  checkout: mutation.cartLinesUpdate.cart
                 });
               }
             }),
@@ -360,44 +288,41 @@ export class CartEffects {
       bufferWhen(() => debounced$),
       withLatestFrom(this.store.pipe(select(selectCheckout))),
       mergeMap(([actions, checkout]) => {
-        const changes = {};
+        const changes: { [lineId: string]: number } = {};
         actions.forEach(action => {
-          changes[action.variantId] = (changes[action.variantId] || 0) + 1;
+          changes[action.lineId] = (changes[action.lineId] || 0) + 1;
         });
 
         if (checkout) {
-          const data: CheckoutLineItemsReplaceMutationVariables = {
-            checkoutId: checkout.id,
-            lineItems: collectLineItems(
-              checkout.lineItems.edges.map(edge => edge.node)
-            ).map(({ variantId, quantity }) => {
-              if (changes[variantId]) {
-                return {
-                  variantId,
-                  quantity: quantity - changes[variantId]
-                };
-              } else {
-                return {
-                  variantId,
-                  quantity
-                };
-              }
-            })
+          const data: CartLinesUpdateMutationVariables = {
+            cartId: checkout.id,
+            lines: checkout.lines.edges
+              .filter(({ node }) => changes[node.id])
+              .map(({ node: { id, quantity } }) => {
+                if (changes[id]) {
+                  return {
+                    id,
+                    quantity: quantity - changes[id]
+                  };
+                } else {
+                  return {
+                    id,
+                    quantity
+                  };
+                }
+              })
           };
-          return this.checkoutLineItemsReplace.mutate(data).pipe(
+          return this.cartLinesUpdate.mutate(data).pipe(
             map(res => {
-              const mutation: CheckoutLineItemsReplaceMutation = res.data;
-              if (
-                mutation.checkoutLineItemsReplace &&
-                mutation.checkoutLineItemsReplace.checkout
-              ) {
+              const mutation: CartLinesUpdateMutation = res.data;
+              if (mutation.cartLinesUpdate && mutation.cartLinesUpdate.cart) {
                 return decrementLineItemQuantitySuccess({
-                  checkout: mutation.checkoutLineItemsReplace.checkout
+                  checkout: mutation.cartLinesUpdate.cart
                 });
               }
             }),
             catchError(err => {
-              console.error('Unable to increment quantity on cart', err);
+              console.error('Unable to decrement quantity on cart', err);
               return of(decrementLineItemQuantityFailure());
             })
           );
@@ -418,7 +343,7 @@ export class CartEffects {
         }
         const data: CheckoutCreateMutationVariables = {
           input: {
-            lineItems: []
+            lines: []
           }
         };
         return this.createCheckout(data, this.userAccessToken).pipe(
@@ -442,9 +367,9 @@ export class CartEffects {
     return this.checkoutCreate.mutate(data).pipe(
       map(res => {
         const mutation: CheckoutCreateMutation = res.data;
-        if (mutation.checkoutCreate && mutation.checkoutCreate.checkout) {
+        if (mutation.cartCreate && mutation.cartCreate.cart) {
           if (userAccessToken) {
-            const checkoutId = mutation.checkoutCreate.checkout.id;
+            const checkoutId = mutation.cartCreate.cart.id;
             this.checkoutCustomerAssociateV2
               .mutate({
                 checkoutId,
@@ -452,7 +377,7 @@ export class CartEffects {
               })
               .toPromise();
           }
-          return mutation.checkoutCreate.checkout;
+          return mutation.cartCreate.cart;
         }
       })
     );
@@ -466,18 +391,18 @@ export class CartEffects {
           const mutation: CheckoutDiscountCodeApplyV2Mutation = response.data;
 
           if (
-            mutation.checkoutDiscountCodeApplyV2.userErrors &&
-            mutation.checkoutDiscountCodeApplyV2.userErrors.find(
+            mutation.cartDiscountCodesUpdate.userErrors &&
+            mutation.cartDiscountCodesUpdate.userErrors.find(
               error => error.field.indexOf('discountCode') > -1
             )
           ) {
             return applyCouponFailure({
-              checkout: mutation.checkoutDiscountCodeApplyV2.checkout,
+              checkout: mutation.cartDiscountCodesUpdate.cart,
               code: discountCode
             });
           }
           return applyCouponSuccess({
-            checkout: mutation.checkoutDiscountCodeApplyV2.checkout
+            checkout: mutation.cartDiscountCodesUpdate.cart
           });
         })
       );
@@ -492,7 +417,8 @@ export class CartEffects {
     private checkoutDiscountCodeApplyV2: CheckoutDiscountCodeApplyV2GQL,
     private checkoutDiscountCodeRemove: CheckoutDiscountCodeRemoveGQL,
     private getCheckout: GetCheckoutGQL,
-    private checkoutLineItemsReplace: CheckoutLineItemsReplaceGQL,
+    private cartLinesRemove: CartLinesRemoveGQL,
+    private cartLinesUpdate: CartLinesUpdateGQL,
     @Inject('ngShopifyCartConfig') private config: INgShopifyCartConfig
   ) {
     if (this.config.selectUserAccessToken) {
