@@ -54,6 +54,36 @@ fragment lineItemProperties on CartLine {
       }
     }
   }
+  sellingPlanAllocation {
+    priceAdjustments {
+      compareAtPrice {
+        amount
+        currencyCode
+      }
+      perDeliveryPrice {
+        amount
+        currencyCode
+      }
+      price {
+        amount
+        currencyCode
+      }
+      unitPrice {
+        amount
+        currencyCode
+      }
+    }
+    sellingPlan {
+      id
+      name
+      description
+      options {
+        name
+        value
+      }
+      recurringDeliveries
+    }
+  }
 }
 
 fragment checkoutState on Cart {

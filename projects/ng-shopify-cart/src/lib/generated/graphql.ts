@@ -6029,6 +6029,43 @@ export type LineItemPropertiesFragment = { __typename?: 'CartLine' } & Pick<
           'id' | 'title' | 'handle'
         >;
       };
+    sellingPlanAllocation: Maybe<
+      { __typename?: 'SellingPlanAllocation' } & {
+        priceAdjustments: Array<
+          { __typename?: 'SellingPlanAllocationPriceAdjustment' } & {
+            compareAtPrice: { __typename?: 'MoneyV2' } & Pick<
+              MoneyV2,
+              'amount' | 'currencyCode'
+            >;
+            perDeliveryPrice: { __typename?: 'MoneyV2' } & Pick<
+              MoneyV2,
+              'amount' | 'currencyCode'
+            >;
+            price: { __typename?: 'MoneyV2' } & Pick<
+              MoneyV2,
+              'amount' | 'currencyCode'
+            >;
+            unitPrice: Maybe<
+              { __typename?: 'MoneyV2' } & Pick<
+                MoneyV2,
+                'amount' | 'currencyCode'
+              >
+            >;
+          }
+        >;
+        sellingPlan: { __typename?: 'SellingPlan' } & Pick<
+          SellingPlan,
+          'id' | 'name' | 'description' | 'recurringDeliveries'
+        > & {
+            options: Array<
+              { __typename?: 'SellingPlanOption' } & Pick<
+                SellingPlanOption,
+                'name' | 'value'
+              >
+            >;
+          };
+      }
+    >;
   };
 
 export type CheckoutStateFragment = { __typename?: 'Cart' } & Pick<
@@ -6283,6 +6320,36 @@ export const LineItemPropertiesFragmentDoc = gql`
           title
           handle
         }
+      }
+    }
+    sellingPlanAllocation {
+      priceAdjustments {
+        compareAtPrice {
+          amount
+          currencyCode
+        }
+        perDeliveryPrice {
+          amount
+          currencyCode
+        }
+        price {
+          amount
+          currencyCode
+        }
+        unitPrice {
+          amount
+          currencyCode
+        }
+      }
+      sellingPlan {
+        id
+        name
+        description
+        options {
+          name
+          value
+        }
+        recurringDeliveries
       }
     }
   }

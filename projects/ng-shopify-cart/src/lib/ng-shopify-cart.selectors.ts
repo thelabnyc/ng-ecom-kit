@@ -58,7 +58,8 @@ export const selectCheckoutDiscount = createSelector(
       return null;
     }
 
-    const code = checkout.discountCodes.find(code => code.applicable)?.code
+    const codeApp = checkout.discountCodes.find(code => code.applicable);
+    const code = codeApp ? codeApp.code : null;
 
     if (code) {
       /**
@@ -66,11 +67,11 @@ export const selectCheckoutDiscount = createSelector(
        * discount codes should not be possible, so only calculate discounts
        * from the active discount code
        */
-      let amount = 0
+      let amount = 0;
       for (let line of checkout.lines.edges) {
         for (let alloc of line.node.discountAllocations) {
           if ('code' in alloc && alloc.code === code) {
-            amount += parseFloat(alloc.discountedAmount.amount)
+            amount += parseFloat(alloc.discountedAmount.amount);
           }
         }
       }
@@ -78,32 +79,34 @@ export const selectCheckoutDiscount = createSelector(
         name: code,
         amount: amount.toFixed(2),
         canRemove: true
-      }
+      };
     } else {
       /**
        * If there's no discount code, look for any other active discounts.
        * Only calculate the price for the first one you find
        */
-      let name: string, amount = 0
+      let name: string,
+        amount = 0;
       for (let line of checkout.lines.edges) {
         for (let alloc of line.node.discountAllocations) {
           if (!('code' in alloc)) {
-            if (!name) name = alloc.title
+            if (!name) name = alloc.title;
 
-            if (alloc.title === name) amount += parseFloat(alloc.discountedAmount.amount)
+            if (alloc.title === name)
+              amount += parseFloat(alloc.discountedAmount.amount);
           }
         }
       }
       /**
        * If no discounts are found, return null
        */
-      if (!name) return null
+      if (!name) return null;
 
       return {
         name,
         amount: amount.toFixed(2),
         canRemove: false
-      }
+      };
     }
   }
 );
