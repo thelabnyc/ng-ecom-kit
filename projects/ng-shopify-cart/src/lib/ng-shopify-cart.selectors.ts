@@ -42,78 +42,69 @@ export const selectCheckoutSubtotal = createSelector(
   }
 );
 
+/**
+ * The job of this function is to represent the value of the automatic and
+ * code-based discounts (of which there can theoretially be multiple) that
+ * are affecting the value of the cart. Since in all cases that we allow
+ * there can be only one active discount our code attempts to be correct
+ * within that assumption. In the theoretical case where there are multiple
+ * discounts active we should make sure to only report one, rather than lumping
+ * the amounts together.
+ */
 export const selectCheckoutDiscount = createSelector(
   selectCheckout,
   (checkout): IDiscount | null => {
-    return null;
-    // TEMPORARY: everything changed and the below needs to be basically rewritten
-    // if (
-    //   !checkout ||
-    //   !checkout.discountCodes ||
-    //   checkout.discountCodes.length === 0
-    // ) {
-    //   return null;
-    // }
+    if (!checkout) {
+      return null;
+    }
 
-    // /**
-    //  * finds the first discount that is either:
-    //  * automatic (and therefore always applied) or
-    //  * a successfully applied promo code
-    //  */
-    // const node = checkout.discountApplications.edges.find(
-    //   application =>
-    //     application.node.__typename !== 'DiscountCodeApplication' ||
-    //     application.node.applicable
-    // ).node;
-    // if (!node) {
-    //   return null;
-    // }
+    const code = checkout.discountCodes.find(code => code.applicable)?.code
 
-    // let name: string;
-    // let canRemove: boolean;
-    // if (node.__typename === 'DiscountCodeApplication') {
-    //   name = node.code;
-    //   canRemove = true;
-    // } else {
-    //   name = node.title;
-    //   canRemove = false;
-    // }
+    if (code) {
+      /**
+       * If there is a discount code then automatic discounts and other
+       * discount codes should not be possible, so only calculate discounts
+       * from the active discount code
+       */
+      let amount = 0
+      for (let line of checkout.lines.edges) {
+        for (let alloc of line.node.discountAllocations) {
+          if ('code' in alloc && alloc.code === code) {
+            amount += parseFloat(alloc.discountedAmount.amount)
+          }
+        }
+      }
+      return {
+        name: code,
+        amount: amount.toFixed(2),
+        canRemove: true
+      }
+    } else {
+      /**
+       * If there's no discount code, look for any other active discounts.
+       * Only calculate the price for the first one you find
+       */
+      let name: string, amount = 0
+      for (let line of checkout.lines.edges) {
+        for (let alloc of line.node.discountAllocations) {
+          if (!('code' in alloc)) {
+            if (!name) name = alloc.title
 
-    // let amount: string;
-    // if (
-    //   node.allocationMethod === 'ACROSS' &&
-    //   node.value.__typename === 'MoneyV2'
-    // ) {
-    //   amount = checkout.discountApplications.edges
-    //     .filter(({ node: other }) => {
-    //       if ('title' in other && 'title' in node)
-    //         return other.title === node.title;
-    //       else if ('code' in other && 'code' in node)
-    //         return other.code === node.code;
-    //       else return false;
-    //     })
-    //     .reduce((total, edge) => {
-    //       if (edge.node.value.__typename === 'MoneyV2')
-    //         return total + parseFloat(edge.node.value.amount);
-    //       else return total;
-    //     }, 0)
-    //     .toFixed(2);
-    // } else {
-    //   amount = checkout.lineItems.edges
-    //     .reduce(
-    //       (total, item) =>
-    //         total +
-    //         item.node.discountAllocations.reduce(
-    //           (subtotal, allocation) =>
-    //             subtotal + parseFloat(allocation.allocatedAmount.amount),
-    //           0
-    //         ),
-    //       0
-    //     )
-    //     .toFixed(2);
-    // }
+            if (alloc.title === name) amount += parseFloat(alloc.discountedAmount.amount)
+          }
+        }
+      }
+      /**
+       * If no discounts are found, return null
+       */
+      if (!name) return null
 
-    // return { amount, name, canRemove };
+      return {
+        name,
+        amount: amount.toFixed(2),
+        canRemove: false
+      }
+    }
   }
 );
 
