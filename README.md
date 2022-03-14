@@ -23,3 +23,13 @@ Angular wrapper around Yotpo's JS Widget. Has no other dependencies.
 ## Development server
 
 Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+
+## Publishing New Versions
+
+Use the `publish-version.sh` script with the new version number as an argument.
+
+```bash
+./publish-version.sh "0.1.0"
+```
+
+This script will update the appropriate versions in package.json, commit, tag, and push. Gitlab CI will, upon receipt of the new tag, build the new versions and publish them to the package registry.
