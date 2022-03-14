@@ -4,7 +4,7 @@ export interface INgShopifyCartConfig {
 }
 export interface IVariantIdQuantity {
   variantId: number;
-  sellingPlanId: string;
+  sellingPlanId?: string;
   quantity: number;
 }
 
