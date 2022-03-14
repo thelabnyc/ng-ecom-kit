@@ -14,7 +14,7 @@ if [ -z "$VERSION" ]; then
 fi
 
 # Make sure we're on the default branch
-# CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
+CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
 if [ "$CURRENT_BRANCH" != "$DEFAULT_BRANCH" ]; then
     echo "This script must be run only from the default branch ($DEFAULT_BRANCH). Current branch is $CURRENT_BRANCH."
     exit 1
