@@ -1,6 +1,6 @@
 {
   "name": "@thelabnyc/ng-filterable-grid",
-  "version": "0.0.7",
+  "version": "0.1.0-a1",
   "peerDependencies": {
     "@angular/common": "^8.0.1",
     "@angular/core": "^8.0.1"
