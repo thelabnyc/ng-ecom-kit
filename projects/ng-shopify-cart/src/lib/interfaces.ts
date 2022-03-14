@@ -4,11 +4,13 @@ export interface INgShopifyCartConfig {
 }
 export interface IVariantIdQuantity {
   variantId: number;
+  sellingPlanId?: string;
   quantity: number;
 }
 
 export interface IVariantShopifyIdQuantity {
-  variantId: string;
+  lineId: string;
+  sellingPlanId: string;
   quantity: number;
 }
 

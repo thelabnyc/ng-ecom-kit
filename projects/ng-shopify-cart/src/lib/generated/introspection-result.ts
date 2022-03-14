@@ -15,7 +15,7 @@ const result: IntrospectionResultData = {
     types: [
       {
         kind: 'INTERFACE',
-        name: 'Node',
+        name: 'HasMetafields',
         possibleTypes: [
           {
             name: 'Article'
@@ -24,7 +24,40 @@ const result: IntrospectionResultData = {
             name: 'Blog'
           },
           {
-            name: 'Comment'
+            name: 'Collection'
+          },
+          {
+            name: 'Product'
+          },
+          {
+            name: 'ProductVariant'
+          },
+          {
+            name: 'Customer'
+          },
+          {
+            name: 'Order'
+          },
+          {
+            name: 'Page'
+          },
+          {
+            name: 'Shop'
+          }
+        ]
+      },
+      {
+        kind: 'INTERFACE',
+        name: 'Node',
+        possibleTypes: [
+          {
+            name: 'Article'
+          },
+          {
+            name: 'Metafield'
+          },
+          {
+            name: 'Blog'
           },
           {
             name: 'Collection'
@@ -33,13 +66,13 @@ const result: IntrospectionResultData = {
             name: 'Product'
           },
           {
-            name: 'Metafield'
+            name: 'ProductOption'
           },
           {
             name: 'ProductVariant'
           },
           {
-            name: 'ProductOption'
+            name: 'Location'
           },
           {
             name: 'MailingAddress'
@@ -63,31 +96,28 @@ const result: IntrospectionResultData = {
             name: 'ShopPolicy'
           },
           {
+            name: 'MediaImage'
+          },
+          {
+            name: 'Comment'
+          },
+          {
+            name: 'Cart'
+          },
+          {
+            name: 'CartLine'
+          },
+          {
             name: 'Payment'
           },
           {
             name: 'ExternalVideo'
           },
           {
-            name: 'MediaImage'
-          },
-          {
             name: 'Model3d'
           },
           {
             name: 'Video'
-          }
-        ]
-      },
-      {
-        kind: 'INTERFACE',
-        name: 'HasMetafields',
-        possibleTypes: [
-          {
-            name: 'Product'
-          },
-          {
-            name: 'ProductVariant'
           }
         ]
       },
@@ -96,10 +126,52 @@ const result: IntrospectionResultData = {
         name: 'MetafieldParentResource',
         possibleTypes: [
           {
+            name: 'Article'
+          },
+          {
+            name: 'Blog'
+          },
+          {
+            name: 'Collection'
+          },
+          {
+            name: 'Customer'
+          },
+          {
+            name: 'Order'
+          },
+          {
+            name: 'Page'
+          },
+          {
             name: 'Product'
           },
           {
             name: 'ProductVariant'
+          },
+          {
+            name: 'Shop'
+          }
+        ]
+      },
+      {
+        kind: 'INTERFACE',
+        name: 'OnlineStorePublishable',
+        possibleTypes: [
+          {
+            name: 'Article'
+          },
+          {
+            name: 'Blog'
+          },
+          {
+            name: 'Collection'
+          },
+          {
+            name: 'Product'
+          },
+          {
+            name: 'Page'
           }
         ]
       },
@@ -108,16 +180,31 @@ const result: IntrospectionResultData = {
         name: 'Media',
         possibleTypes: [
           {
-            name: 'ExternalVideo'
+            name: 'MediaImage'
           },
           {
-            name: 'MediaImage'
+            name: 'ExternalVideo'
           },
           {
             name: 'Model3d'
           },
           {
             name: 'Video'
+          }
+        ]
+      },
+      {
+        kind: 'UNION',
+        name: 'SellingPlanPriceAdjustmentValue',
+        possibleTypes: [
+          {
+            name: 'SellingPlanFixedAmountPriceAdjustment'
+          },
+          {
+            name: 'SellingPlanFixedPriceAdjustment'
+          },
+          {
+            name: 'SellingPlanPercentagePriceAdjustment'
           }
         ]
       },
@@ -152,9 +239,51 @@ const result: IntrospectionResultData = {
         ]
       },
       {
+        kind: 'UNION',
+        name: 'MetafieldReference',
+        possibleTypes: [
+          {
+            name: 'MediaImage'
+          },
+          {
+            name: 'Page'
+          },
+          {
+            name: 'Product'
+          },
+          {
+            name: 'ProductVariant'
+          }
+        ]
+      },
+      {
+        kind: 'INTERFACE',
+        name: 'CartDiscountAllocation',
+        possibleTypes: [
+          {
+            name: 'CartAutomaticDiscountAllocation'
+          },
+          {
+            name: 'CartCodeDiscountAllocation'
+          }
+        ]
+      },
+      {
+        kind: 'UNION',
+        name: 'Merchandise',
+        possibleTypes: [
+          {
+            name: 'ProductVariant'
+          }
+        ]
+      },
+      {
         kind: 'INTERFACE',
         name: 'DisplayableError',
         possibleTypes: [
+          {
+            name: 'CartUserError'
+          },
           {
             name: 'CheckoutUserError'
           },

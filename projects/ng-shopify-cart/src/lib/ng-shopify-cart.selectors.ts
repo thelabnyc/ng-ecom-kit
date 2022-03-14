@@ -15,15 +15,15 @@ export const selectCheckoutLineItems = createSelector(
   selectCheckout,
   (checkout): LineItemPropertiesFragment[] => {
     if (checkout) {
-      return checkout.lineItems.edges
+      return checkout.lines.edges
         .map(edge => {
           return edge.node;
         })
         .sort((node1, node2) => {
           // returns an alphabetically sorted array of line items
-          return node1.title < node2.title
+          return node1.merchandise.title < node2.merchandise.title
             ? -1
-            : node1.title > node2.title
+            : node1.merchandise.title > node2.merchandise.title
             ? 1
             : 0;
         });
@@ -35,84 +35,79 @@ export const selectCheckoutSubtotal = createSelector(
   selectCheckout,
   (checkout): string => {
     if (checkout) {
-      return checkout.subtotalPrice;
+      return checkout.estimatedCost.subtotalAmount.amount;
     } else {
       return '0.00';
     }
   }
 );
 
+/**
+ * The job of this function is to represent the value of the automatic and
+ * code-based discounts (of which there can theoretially be multiple) that
+ * are affecting the value of the cart. Since in all cases that we allow
+ * there can be only one active discount our code attempts to be correct
+ * within that assumption. In the theoretical case where there are multiple
+ * discounts active we should make sure to only report one, rather than lumping
+ * the amounts together.
+ */
 export const selectCheckoutDiscount = createSelector(
   selectCheckout,
   (checkout): IDiscount | null => {
-    if (
-      !checkout ||
-      !checkout.discountApplications ||
-      !checkout.discountApplications.edges ||
-      checkout.discountApplications.edges.length === 0
-    ) {
+    if (!checkout) {
       return null;
     }
 
-    /**
-     * finds the first discount that is either:
-     * automatic (and therefore always applied) or
-     * a successfully applied promo code
-     */
-    const node = checkout.discountApplications.edges.find(
-      application =>
-        application.node.__typename !== 'DiscountCodeApplication' ||
-        application.node.applicable
-    ).node;
-    if (!node) {
-      return null;
-    }
+    const codeApp = checkout.discountCodes.find(code => code.applicable);
+    const code = codeApp ? codeApp.code : null;
 
-    let name: string;
-    let canRemove: boolean;
-    if (node.__typename === 'DiscountCodeApplication') {
-      name = node.code;
-      canRemove = true;
+    if (code) {
+      /**
+       * If there is a discount code then automatic discounts and other
+       * discount codes should not be possible, so only calculate discounts
+       * from the active discount code
+       */
+      let amount = 0;
+      for (let line of checkout.lines.edges) {
+        for (let alloc of line.node.discountAllocations) {
+          if ('code' in alloc && alloc.code === code) {
+            amount += parseFloat(alloc.discountedAmount.amount);
+          }
+        }
+      }
+      return {
+        name: code,
+        amount: amount.toFixed(2),
+        canRemove: true
+      };
     } else {
-      name = node.title;
-      canRemove = false;
-    }
+      /**
+       * If there's no discount code, look for any other active discounts.
+       * Only calculate the price for the first one you find
+       */
+      let name: string,
+        amount = 0;
+      for (let line of checkout.lines.edges) {
+        for (let alloc of line.node.discountAllocations) {
+          if (!('code' in alloc)) {
+            if (!name) name = alloc.title;
 
-    let amount: string;
-    if (
-      node.allocationMethod === 'ACROSS' &&
-      node.value.__typename === 'MoneyV2'
-    ) {
-      amount = checkout.discountApplications.edges
-        .filter(({ node: other }) => {
-          if ('title' in other && 'title' in node)
-            return other.title === node.title;
-          else if ('code' in other && 'code' in node)
-            return other.code === node.code;
-          else return false;
-        })
-        .reduce((total, edge) => {
-          if (edge.node.value.__typename === 'MoneyV2')
-            return total + parseFloat(edge.node.value.amount);
-          else return total;
-        }, 0)
-        .toFixed(2);
-    } else {
-      amount = checkout.lineItems.edges
-        .reduce(
-          (total, item) =>
-            total +
-            item.node.discountAllocations.reduce(
-              (subtotal, allocation) =>
-                subtotal + parseFloat(allocation.allocatedAmount.amount),
-              0
-            ),
-          0
-        )
-        .toFixed(2);
-    }
+            if (alloc.title === name)
+              amount += parseFloat(alloc.discountedAmount.amount);
+          }
+        }
+      }
+      /**
+       * If no discounts are found, return null
+       */
+      if (!name) return null;
 
-    return { amount, name, canRemove };
+      return {
+        name,
+        amount: amount.toFixed(2),
+        canRemove: false
+      };
+    }
   }
 );
 
@@ -127,7 +122,7 @@ export const selectCheckoutItemCount = createSelector(
     if (checkout) {
       // loop through line items to calculate the quantity of items in checkout
       let itemQuantity = 0;
-      checkout.lineItems.edges.forEach(edge => {
+      checkout.lines.edges.forEach(edge => {
         itemQuantity += edge.node.quantity;
       });
       return itemQuantity;
@@ -140,7 +135,7 @@ export const selectCheckoutUrl = createSelector(
   selectCheckout,
   checkout => {
     if (checkout) {
-      return checkout.webUrl as string;
+      return checkout.checkoutUrl as string;
     }
   }
 );

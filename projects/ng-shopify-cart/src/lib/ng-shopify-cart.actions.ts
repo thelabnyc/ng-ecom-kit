@@ -3,7 +3,7 @@ import {
   CheckoutStateFragment,
   CheckoutLineItemInput
 } from './generated/graphql';
-import { IVariantIdQuantity, IVariantShopifyIdQuantity } from './interfaces';
+import { IVariantIdQuantity } from './interfaces';
 
 export const refreshCart = createAction('[EcomKit/shop-cart] Refresh Cart');
 export const addToCheckout = createAction(
@@ -57,7 +57,7 @@ export const removeCouponSuccess = createAction(
 );
 export const removeLineItem = createAction(
   '[EcomKit/shop-cart] Remove Line Item from Cart',
-  props<IVariantShopifyIdQuantity>()
+  props<{ lineId: string }>()
 );
 export const removeLineItemSuccess = createAction(
   '[EcomKit/shop-cart] Remove Line Item from Cart Success',
@@ -69,7 +69,7 @@ export const removeLineItemFailure = createAction(
 export const clearCart = createAction('[EcomKit/shop-cart] Clear Cart');
 export const incrementLineItemQuantity = createAction(
   '[EcomKit/shop-cart] Increment Line Item Quantity on Cart',
-  props<IVariantShopifyIdQuantity>()
+  props<{ lineId: string }>()
 );
 export const incrementLineItemQuantitySuccess = createAction(
   '[EcomKit/shop-cart] Increment Line Item Quantity on Cart Success',
@@ -80,7 +80,7 @@ export const incrementLineItemQuantityFailure = createAction(
 );
 export const decrementLineItemQuantity = createAction(
   '[EcomKit/shop-cart] Decrement Line Item Quantity on Cart',
-  props<IVariantShopifyIdQuantity>()
+  props<{ lineId: string }>()
 );
 export const decrementLineItemQuantitySuccess = createAction(
   '[EcomKit/shop-cart] Decrement Line Item Quantity on Cart Success',
