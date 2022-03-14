@@ -4,8 +4,9 @@ Use Yotpo widgets in Angular.
 
 # Install
 
-1. `npm i @ng-ecom-kit/ng-yotpo`
-2. Add `NgYotpoModule.forRoot({apiKey: 'your-key'})` to your AppModule's imports.
+1. `echo @thelabnyc:registry=https://gitlab.com/api/v4/packages/npm/ >> .npmrc`
+2. `npm i @thelabnyc/ng-yotpo`
+3. Add `NgYotpoModule.forRoot({apiKey: 'your-key'})` to your AppModule's imports.
 
 # Usage
 
@@ -40,10 +41,6 @@ Run `ng generate component component-name --project ng-yotpo` to generate a new 
 ## Build
 
 Run `ng build ng-yotpo` to build the project. The build artifacts will be stored in the `dist/` directory.
-
-## Publishing
-
-After building your library with `ng build ng-yotpo`, go to the dist folder `cd dist/ng-yotpo` and run `npm publish`.
 
 ## Running unit tests
 
