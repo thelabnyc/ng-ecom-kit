@@ -1,6 +1,6 @@
 {
   "name": "ng-ecom-kit",
-  "version": "0.1.0-b1",
+  "version": "0.1.0-b2",
   "scripts": {
     "ng": "ng",
     "start": "ng serve --host 0.0.0.0 --disableHostCheck",
