@@ -29,7 +29,8 @@ import {
   CartLinesRemoveMutationVariables,
   CartLinesUpdateGQL,
   CartLinesUpdateMutationVariables,
-  CartLinesUpdateMutation
+  CartLinesUpdateMutation,
+  CartLineInput
 } from './generated/graphql';
 import {
   addToCheckout,
@@ -74,11 +75,11 @@ export class CartEffects {
       withLatestFrom(this.store.pipe(select(selectCheckout))),
       mergeMap(([action, checkout]) => {
         const variantGID = getVariantGraphqlId(action.variantId);
-        const lineItems = [
+        const lineItems: CartLineInput[] = [
           {
             merchandiseId: variantGID,
             quantity: action.quantity,
-            sellingPlan: action.sellingPlanId
+            sellingPlanId: action.sellingPlanId
           }
         ];
         if (checkout) {
