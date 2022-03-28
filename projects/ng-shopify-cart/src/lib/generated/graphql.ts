@@ -224,9 +224,8 @@ export enum ArticleSortKeys {
   /** Sort by the `id` value. */
   Id = 'ID',
   /**
-   * During a search (i.e. when the `query` parameter has been specified on the connection) this sorts the
-   * results by relevance to the search term(s). When no search query is specified, this sort key is not
-   * deterministic and should not be used.
+   * Sort by relevance to the search terms when the `query` parameter is specified on the connection.
+   * Don't use this sort key when no search query is specified.
    **/
   Relevance = 'RELEVANCE'
 }
@@ -365,9 +364,8 @@ export enum BlogSortKeys {
   /** Sort by the `id` value. */
   Id = 'ID',
   /**
-   * During a search (i.e. when the `query` parameter has been specified on the connection) this sorts the
-   * results by relevance to the search term(s). When no search query is specified, this sort key is not
-   * deterministic and should not be used.
+   * Sort by relevance to the search terms when the `query` parameter is specified on the connection.
+   * Don't use this sort key when no search query is specified.
    **/
   Relevance = 'RELEVANCE'
 }
@@ -1486,9 +1484,8 @@ export enum CollectionSortKeys {
   /** Sort by the `id` value. */
   Id = 'ID',
   /**
-   * During a search (i.e. when the `query` parameter has been specified on the connection) this sorts the
-   * results by relevance to the search term(s). When no search query is specified, this sort key is not
-   * deterministic and should not be used.
+   * Sort by relevance to the search terms when the `query` parameter is specified on the connection.
+   * Don't use this sort key when no search query is specified.
    **/
   Relevance = 'RELEVANCE'
 }
@@ -4383,9 +4380,8 @@ export enum OrderSortKeys {
   /** Sort by the `id` value. */
   Id = 'ID',
   /**
-   * During a search (i.e. when the `query` parameter has been specified on the connection) this sorts the
-   * results by relevance to the search term(s). When no search query is specified, this sort key is not
-   * deterministic and should not be used.
+   * Sort by relevance to the search terms when the `query` parameter is specified on the connection.
+   * Don't use this sort key when no search query is specified.
    **/
   Relevance = 'RELEVANCE'
 }
@@ -4486,9 +4482,8 @@ export enum PageSortKeys {
   /** Sort by the `id` value. */
   Id = 'ID',
   /**
-   * During a search (i.e. when the `query` parameter has been specified on the connection) this sorts the
-   * results by relevance to the search term(s). When no search query is specified, this sort key is not
-   * deterministic and should not be used.
+   * Sort by relevance to the search terms when the `query` parameter is specified on the connection.
+   * Don't use this sort key when no search query is specified.
    **/
   Relevance = 'RELEVANCE'
 }
@@ -4821,9 +4816,8 @@ export enum ProductCollectionSortKeys {
   /** Sort by the `collection-default` value. */
   CollectionDefault = 'COLLECTION_DEFAULT',
   /**
-   * During a search (i.e. when the `query` parameter has been specified on the connection) this sorts the
-   * results by relevance to the search term(s). When no search query is specified, this sort key is not
-   * deterministic and should not be used.
+   * Sort by relevance to the search terms when the `query` parameter is specified on the connection.
+   * Don't use this sort key when no search query is specified.
    **/
   Relevance = 'RELEVANCE'
 }
@@ -4875,9 +4869,8 @@ export enum ProductImageSortKeys {
   /** Sort by the `id` value. */
   Id = 'ID',
   /**
-   * During a search (i.e. when the `query` parameter has been specified on the connection) this sorts the
-   * results by relevance to the search term(s). When no search query is specified, this sort key is not
-   * deterministic and should not be used.
+   * Sort by relevance to the search terms when the `query` parameter is specified on the connection.
+   * Don't use this sort key when no search query is specified.
    **/
   Relevance = 'RELEVANCE'
 }
@@ -4889,9 +4882,8 @@ export enum ProductMediaSortKeys {
   /** Sort by the `id` value. */
   Id = 'ID',
   /**
-   * During a search (i.e. when the `query` parameter has been specified on the connection) this sorts the
-   * results by relevance to the search term(s). When no search query is specified, this sort key is not
-   * deterministic and should not be used.
+   * Sort by relevance to the search terms when the `query` parameter is specified on the connection.
+   * Don't use this sort key when no search query is specified.
    **/
   Relevance = 'RELEVANCE'
 }
@@ -4939,9 +4931,8 @@ export enum ProductSortKeys {
   /** Sort by the `id` value. */
   Id = 'ID',
   /**
-   * During a search (i.e. when the `query` parameter has been specified on the connection) this sorts the
-   * results by relevance to the search term(s). When no search query is specified, this sort key is not
-   * deterministic and should not be used.
+   * Sort by relevance to the search terms when the `query` parameter is specified on the connection.
+   * Don't use this sort key when no search query is specified.
    **/
   Relevance = 'RELEVANCE'
 }
@@ -5071,9 +5062,8 @@ export enum ProductVariantSortKeys {
   /** Sort by the `id` value. */
   Id = 'ID',
   /**
-   * During a search (i.e. when the `query` parameter has been specified on the connection) this sorts the
-   * results by relevance to the search term(s). When no search query is specified, this sort key is not
-   * deterministic and should not be used.
+   * Sort by relevance to the search terms when the `query` parameter is specified on the connection.
+   * Don't use this sort key when no search query is specified.
    **/
   Relevance = 'RELEVANCE'
 }
@@ -6183,35 +6173,7 @@ export type GetCheckoutQueryVariables = {
 };
 
 export type GetCheckoutQuery = { __typename?: 'QueryRoot' } & {
-  node: Maybe<
-    {
-      __typename?:
-        | 'Article'
-        | 'Metafield'
-        | 'Blog'
-        | 'Collection'
-        | 'Product'
-        | 'ProductOption'
-        | 'ProductVariant'
-        | 'Location'
-        | 'MailingAddress'
-        | 'Checkout'
-        | 'AppliedGiftCard'
-        | 'CheckoutLineItem'
-        | 'Order'
-        | 'Page'
-        | 'ShopPolicy'
-        | 'MediaImage'
-        | 'Comment'
-        | 'Cart'
-        | 'CartLine'
-        | 'Payment'
-        | 'ExternalVideo'
-        | 'Model3d'
-        | 'Video';
-    } & Pick<Node, 'id'> &
-      ({ __typename?: 'Cart' } & CheckoutStateFragment)
-  >;
+  cart: Maybe<{ __typename?: 'Cart' } & CheckoutStateFragment>;
 };
 
 export type CheckoutCustomerAssociateV2MutationVariables = {
@@ -6517,11 +6479,8 @@ export class CartLinesUpdateGQL extends Apollo.Mutation<
 }
 export const GetCheckoutDocument = gql`
   query getCheckout($input: ID!) {
-    node(id: $input) {
-      id
-      ... on Cart {
-        ...checkoutState
-      }
+    cart(id: $input) {
+      ...checkoutState
     }
   }
   ${CheckoutStateFragmentDoc}

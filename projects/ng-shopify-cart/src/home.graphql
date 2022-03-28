@@ -169,11 +169,8 @@ mutation cartLinesUpdate($cartId: ID!, $lines: [CartLineUpdateInput!]!) {
 }
 
 query getCheckout($input: ID!) {
-  node(id: $input) {
-    id
-    ... on Cart {
-      ...checkoutState
-    }
+  cart(id: $input) {
+    ...checkoutState
   }
 }
 
