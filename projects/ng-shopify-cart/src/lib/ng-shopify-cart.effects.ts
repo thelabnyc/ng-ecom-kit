@@ -129,9 +129,9 @@ export class CartEffects {
         if (checkout) {
           return this.getCheckout.fetch({ input: checkout.id }).pipe(
             map(({ data }) => {
-              if (data.node) {
+              if (data.cart) {
                 // If order is set, then the order is completed. Clear the cart.
-                return setCheckout({ checkout: data.node });
+                return setCheckout({ checkout: data.cart });
               } else {
                 // There is no corresponding checkout, this often happens after a shopify outage.
                 return clearCart();
