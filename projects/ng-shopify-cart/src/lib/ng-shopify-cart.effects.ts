@@ -2,6 +2,7 @@ import { Injectable, Inject } from '@angular/core';
 import { Actions, ofType, createEffect } from '@ngrx/effects';
 import {
   mergeMap,
+  concatMap,
   withLatestFrom,
   map,
   exhaustMap,
@@ -34,6 +35,9 @@ import {
 } from './generated/graphql';
 import {
   addToCheckout,
+  batchAddOrRemoveFromCheckout,
+  batchAddOrRemoveFromCheckoutSuccess,
+  batchAddOrRemoveFromCheckoutFailure,
   setCheckout,
   applyCoupon,
   applyCouponSuccess,
@@ -63,6 +67,15 @@ export function getVariantGraphqlId(variantId: number) {
   // Make graphql id from rest api id (yes really..)
   return btoa('gid://shopify/ProductVariant/' + variantId);
 }
+
+type AddOrRemoveLineMutation =
+  | CheckoutLineItemsAddMutation
+  | CartLinesRemoveMutation;
+const isAddMutation = (
+  m: AddOrRemoveLineMutation
+): m is CheckoutLineItemsAddMutation => {
+  return (m as CheckoutLineItemsAddMutation).cartLinesAdd !== undefined;
+};
 
 @Injectable()
 export class CartEffects {
@@ -117,6 +130,79 @@ export class CartEffects {
             })
           );
         }
+      })
+    )
+  );
+
+  batchAddOrRemoveFromCheckout$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(batchAddOrRemoveFromCheckout),
+      withLatestFrom(this.store.pipe(select(selectCheckout))),
+      mergeMap(([action, checkout]) => {
+        // If there's no checkout yet, abort.
+        if (!checkout) {
+          return EMPTY;
+        }
+        // Build data for add and remove mutations
+        const lineItemsToAdd: CartLineInput[] = action.add.map(toAdd => {
+          const variantGID = getVariantGraphqlId(toAdd.variantId);
+          return {
+            merchandiseId: variantGID,
+            quantity: toAdd.quantity,
+            sellingPlanId: toAdd.sellingPlanId
+          };
+        });
+        const addMutationData: CheckoutLineItemsAddMutationVariables = {
+          cartId: checkout.id,
+          lineItems: lineItemsToAdd
+        };
+        const removeMutationData: CartLinesRemoveMutationVariables = {
+          cartId: checkout.id,
+          lineIds: action.remove.map(toRemove => toRemove.lineId)
+        };
+        const needsToAdd = addMutationData.lineItems.length > 0;
+        const needsToRemove = removeMutationData.lineIds.length > 0;
+        // Is there anything to do? If not, bail now.
+        if (!needsToAdd && !needsToRemove) {
+          return EMPTY;
+        }
+        // Run the mutations: add, then remove;
+        return this.checkoutLineItemsAdd.mutate(addMutationData).pipe(
+          map(addResp => {
+            const mutation: CheckoutLineItemsAddMutation = addResp.data;
+            if (mutation.cartLinesAdd.userErrors.length) {
+              throw new Error(
+                `Abort! Error adding items during batch: ${JSON.stringify(
+                  mutation.cartLinesAdd.userErrors
+                )}`
+              );
+            }
+            return addResp;
+          }),
+          concatMap(_ => {
+            return this.cartLinesRemove.mutate(removeMutationData);
+          }),
+          map(addOrRemoveResp => {
+            const mutation: AddOrRemoveLineMutation = addOrRemoveResp.data;
+            const mutationData = isAddMutation(mutation)
+              ? mutation.cartLinesAdd
+              : mutation.cartLinesRemove;
+            if (mutationData.userErrors.length > 0) {
+              throw new Error(
+                `Abort! Error removing items during batch: ${JSON.stringify(
+                  mutationData.userErrors
+                )}`
+              );
+            }
+            return batchAddOrRemoveFromCheckoutSuccess({
+              checkout: mutationData.cart
+            });
+          }),
+          catchError(err => {
+            console.error(err);
+            return of(batchAddOrRemoveFromCheckoutFailure());
+          })
+        );
       })
     )
   );

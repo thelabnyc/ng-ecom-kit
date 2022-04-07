@@ -17,6 +17,22 @@ export const addToCheckoutSuccess = createAction(
   '[EcomKit/shop-cart] Add To Checkout Success',
   props<{ checkout: CheckoutStateFragment }>()
 );
+export const batchAddOrRemoveFromCheckout = createAction(
+  '[EcomKit/shop-cart] Batch Add/Remove From Checkout',
+  props<{
+    add: IVariantIdQuantity[];
+    remove: Array<{
+      lineId: string;
+    }>;
+  }>()
+);
+export const batchAddOrRemoveFromCheckoutFailure = createAction(
+  '[EcomKit/shop-cart] Batch Add/Remove From Checkout Failure'
+);
+export const batchAddOrRemoveFromCheckoutSuccess = createAction(
+  '[EcomKit/shop-cart] Batch Add/Remove From Checkout Success',
+  props<{ checkout: CheckoutStateFragment }>()
+);
 export const createCheckout = createAction(
   '[EcomKit/shop-cart] Create Checkout'
 );

@@ -3,6 +3,7 @@ import { CheckoutStateFragment } from './generated/graphql';
 import {
   setCheckout,
   addToCheckoutSuccess,
+  batchAddOrRemoveFromCheckoutSuccess,
   applyCouponSuccess,
   removeCouponSuccess,
   clearCart,
@@ -29,6 +30,7 @@ const cartReducer = createReducer(
   on(
     setCheckout,
     addToCheckoutSuccess,
+    batchAddOrRemoveFromCheckoutSuccess,
     removeCouponSuccess,
     removeLineItemSuccess,
     incrementLineItemQuantitySuccess,
