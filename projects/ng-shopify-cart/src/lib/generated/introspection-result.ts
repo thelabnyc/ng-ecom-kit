@@ -93,10 +93,19 @@ const result: IntrospectionResultData = {
             name: 'Page'
           },
           {
-            name: 'ShopPolicy'
+            name: 'Shop'
           },
           {
             name: 'MediaImage'
+          },
+          {
+            name: 'ShopPolicy'
+          },
+          {
+            name: 'GenericFile'
+          },
+          {
+            name: 'Video'
           },
           {
             name: 'Comment'
@@ -108,6 +117,18 @@ const result: IntrospectionResultData = {
             name: 'CartLine'
           },
           {
+            name: 'Menu'
+          },
+          {
+            name: 'MenuItem'
+          },
+          {
+            name: 'Metaobject'
+          },
+          {
+            name: 'UrlRedirect'
+          },
+          {
             name: 'Payment'
           },
           {
@@ -115,9 +136,6 @@ const result: IntrospectionResultData = {
           },
           {
             name: 'Model3d'
-          },
-          {
-            name: 'Video'
           }
         ]
       },
@@ -183,13 +201,25 @@ const result: IntrospectionResultData = {
             name: 'MediaImage'
           },
           {
+            name: 'Video'
+          },
+          {
             name: 'ExternalVideo'
           },
           {
             name: 'Model3d'
+          }
+        ]
+      },
+      {
+        kind: 'UNION',
+        name: 'SellingPlanCheckoutChargeValue',
+        possibleTypes: [
+          {
+            name: 'MoneyV2'
           },
           {
-            name: 'Video'
+            name: 'SellingPlanCheckoutChargePercentageValue'
           }
         ]
       },
@@ -243,6 +273,12 @@ const result: IntrospectionResultData = {
         name: 'MetafieldReference',
         possibleTypes: [
           {
+            name: 'Collection'
+          },
+          {
+            name: 'GenericFile'
+          },
+          {
             name: 'MediaImage'
           },
           {
@@ -253,6 +289,18 @@ const result: IntrospectionResultData = {
           },
           {
             name: 'ProductVariant'
+          },
+          {
+            name: 'Video'
+          }
+        ]
+      },
+      {
+        kind: 'UNION',
+        name: 'DeliveryAddress',
+        possibleTypes: [
+          {
+            name: 'MailingAddress'
           }
         ]
       },
@@ -265,6 +313,9 @@ const result: IntrospectionResultData = {
           },
           {
             name: 'CartCodeDiscountAllocation'
+          },
+          {
+            name: 'CartCustomDiscountAllocation'
           }
         ]
       },
