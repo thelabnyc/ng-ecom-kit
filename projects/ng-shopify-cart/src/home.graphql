@@ -44,8 +44,14 @@ fragment lineItemProperties on CartLine {
         transformedSrc(maxHeight: 200, maxWidth: 200)
       }
       title
-      price
-      compareAtPrice
+      price {
+        amount
+        currencyCode
+      }
+      compareAtPrice {
+        amount
+        currencyCode
+      }
       availableForSale
       product {
         id

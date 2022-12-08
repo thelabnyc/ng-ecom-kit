@@ -1,5 +1,5 @@
 schema:
-  - https://devacurl-staging.myshopify.com/api/2022-01/graphql.json:
+  - https://devacurl-staging.myshopify.com/api/2023-01/graphql.json:
       headers:
         X-Shopify-Storefront-Access-Token: a794501aab166392b780afb51d823d38
         Content-Type: application/json
